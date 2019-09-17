@@ -38,7 +38,6 @@ create table if not exists tbl_user (
     sex varchar(2) comment '性别',
     birthday date comment '生日',
     mobile varchar(15) comment '电话',
-    mobile_second varchar(15) comment '备用电话',
     address varchar(255) comment '地址',
     email varchar(255) comment '邮件',
     remark text comment '备注',
@@ -58,7 +57,7 @@ create table if not exists tbl_user (
     key `idx_name`(name),
     key `idx_mobile`(mobile),
     key `idx_birthday`(birthday)
-) comment = '用户'; 
+) comment = '用户';
 
 create table if not exists tbl_product (
     id bigint not null auto_increment,

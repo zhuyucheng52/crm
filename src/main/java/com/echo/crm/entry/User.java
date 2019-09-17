@@ -2,6 +2,8 @@ package com.echo.crm.entry;
 
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * @author yucheng
  * @description
@@ -12,4 +14,14 @@ import lombok.Data;
 public class User {
     private Long id;
     private String name;
+    private String sex;
+    private Date birthday;
+    private String mobile;
+    private String address;
+    private String email;
+    private String remark;
+    private String account;
+    private String password;
+    private Long userId;
+    private Long tenantId;
 }

@@ -68,4 +68,8 @@ public class ResultDTO<T> {
         this.success = Result.RESULT_FAILURE.getValue();
         this.errorMsg = e.getMessage();
     }
+
+    public static <T> ResultDTO<T> createResult(T obj) {
+        return new ResultDTO<>(obj);
+    }
 }

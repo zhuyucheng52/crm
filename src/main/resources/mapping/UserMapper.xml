@@ -6,12 +6,33 @@
         <result column="id" jdbcType="INTEGER" property="id" />
         <result column="userName" jdbcType="VARCHAR" property="name" />
     </resultMap>
+    <update id="update">
+        update tbl_user
+        set name = #{name},
+          sex = #{sex},
+          birthday = #{birthday},
+          mobile = #{mobile},
+          address = #{address},
+          email = #{email},
+          remark = #{remark},
+          password = #{password},
+          update_time = now()
+        where id = #{id}
+    </update>
 
     <select id="findById" resultType="com.echo.crm.entry.User">
         select * from tbl_user where id = #{id}
     </select>
 
     <select id="findUsers" resultType="com.echo.crm.entry.User">
-        select * from tbl_user order by FIELD (tenant_id, 1, 3, 0) asc, id desc
+        select * from tbl_user order by id asc
     </select>
+    <select id="getByAccount" resultType="com.echo.crm.entry.User">
+       select * from tbl_user where account = #{account}
+    </select>
+
+    <insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="com.echo.crm.entry.User">
+        insert into tbl_user(name, sex, birthday, mobile, address, email, remark, account, password, user_id, tenant_id, create_time, update_time) values
+        (#{name}, #{sex}, #{birthday}, #{mobile}, #{address}, #{email}, #{remark}, #{account}, #{password}, #{userId}, #{tenantId}, now(), now())
+    </insert>
 </mapper>
