@@ -3,6 +3,7 @@ package com.echo.crm.service;
 import com.echo.crm.entry.User;
 import com.echo.crm.mapper.UserMapper;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
+import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getUsers(PageBounds pageBounds) {
+    public PageList<User> getUsers(PageBounds pageBounds) {
         return userMapper.findUsers(pageBounds);
     }
 
