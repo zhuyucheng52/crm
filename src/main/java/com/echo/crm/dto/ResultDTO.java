@@ -69,7 +69,21 @@ public class ResultDTO<T> {
         this.errorMsg = e.getMessage();
     }
 
+    /**
+     * 生成ResultDTO对象
+     * @param obj
+     * @param <T>
+     * @return
+     */
     public static <T> ResultDTO<T> createResult(T obj) {
         return new ResultDTO<>(obj);
+    }
+
+    /**
+     * 生成没有结果的ResultDTO对象
+     * @return
+     */
+    public static ResultDTO<Object> createEmptyResult() {
+        return new ResultDTO<Object>(Result.RESULT_SUCCESS);
     }
 }

@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.List;
-
 /**
  * @author yucheng
  * @description
@@ -35,7 +33,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public User add(User user) {
         String account = user.getAccount();
         Assert.isTrue(StringUtils.isNotBlank(account), "账户不能为空");
@@ -47,7 +45,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public User update(User user) {
         Long id = user.getId();
         Assert.notNull(id, "用户ID不能为空");
@@ -74,11 +72,23 @@ public class UserServiceImpl implements UserService {
         if (null != user.getRemark()) {
             u.setRemark(user.getRemark());
         }
-        if (null != user.getPassword()) {
-            u.setPassword(user.getPassword());
-        }
 
         userMapper.update(u);
         return getUserById(id);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updatePassword(Long id, String oldPassword, String newPassword) {
+        Assert.notNull(oldPassword, "原始密码不能为空");
+        Assert.notNull(newPassword, "新密码不能为空");
+        User u = getUserById(id);
+        if (oldPassword.equals(u.getPassword())) {
+            u.setPassword(newPassword);
+        } else {
+            throw new IllegalArgumentException("原始密码错误");
+        }
+
+        userMapper.update(u);
     }
 }

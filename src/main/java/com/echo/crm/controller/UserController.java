@@ -1,5 +1,6 @@
 package com.echo.crm.controller;
 
+import com.echo.crm.dto.PasswordModifyDTO;
 import com.echo.crm.dto.ResultDTO;
 import com.echo.crm.entry.User;
 import com.echo.crm.service.UserService;
@@ -49,6 +50,13 @@ public class UserController {
     @PutMapping("/user")
     public ResultDTO<User> modifyUser(@RequestBody User user) {
         return ResultDTO.createResult(userService.update(user));
+    }
+
+    @PutMapping("/user/password/{id:\\d+}")
+    public ResultDTO<Object> modifyPassword(@PathVariable("id") Long id,
+                                            @RequestBody PasswordModifyDTO password) {
+        userService.updatePassword(id, password.getOldPassword(), password.getNewPassword());
+        return ResultDTO.createEmptyResult();
     }
 
 }
