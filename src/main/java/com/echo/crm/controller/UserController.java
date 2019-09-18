@@ -5,7 +5,7 @@ import com.echo.crm.dto.ResultDTO;
 import com.echo.crm.entry.User;
 import com.echo.crm.service.UserService;
 import com.echo.crm.utils.Page;
-import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
+import com.echo.crm.utils.PageUtils;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,11 +35,12 @@ public class UserController {
         return ResultDTO.createResult(userService.getUserById(id));
     }
 
-    @GetMapping("/users/{page:\\d+}")
-    public ResultDTO<Page<User>> getUser(@PathVariable("page") Integer page,
+    @GetMapping("/users")
+    public ResultDTO<Page<User>> getUser(@RequestParam(value = "page", required = false) Integer page,
+                                         @RequestParam(value = "limit", required = false) Integer limit,
                                          @RequestParam(value = "key", required = false) String key) {
-        PageList<User> users = userService.getUsers(key, new PageBounds(page, 20));
-        return ResultDTO.createResult(new Page(users, users.getPaginator()));
+        PageList<User> users = userService.getUsers(key, PageUtils.createPageBounds(page, limit));
+        return ResultDTO.createResult(PageUtils.createPage(users));
     }
 
     @PostMapping("/user")

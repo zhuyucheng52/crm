@@ -11,7 +11,7 @@ import java.util.Date;
  */
 
 @Data
-public class User {
+public class User extends BaseEntry {
     private Long id;
     private String name;
     private String sex;
@@ -23,5 +23,4 @@ public class User {
     private String account;
     private String password;
     private Long userId;
-    private Long tenantId;
 }

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.echo.crm.mapper.ProductMapper">
+
+    <insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="com.echo.crm.entry.Product">
+      insert into tbl_product(name, disabled, remark, user_id, tenant_id, create_time, update_time) values
+      (#{name}, #{disabled}, #{remark}, #{userId}, #{tenantId}, now(), now())
+    </insert>
+    <update id="update">
+        update tbl_product
+        set name = #{name},
+          disabled = #{disabled},
+          remark = #{remark},
+          update_time = now()
+        where id = #{id}
+    </update>
+    <select id="findById" resultType="com.echo.crm.entry.Product">
+      select *
+      from tbl_product
+      where id = #{id}
+    </select>
+    <select id="findOtherByName" resultType="com.echo.crm.entry.Product">
+      select *
+      from tbl_product
+      where name = #{name}
+        and id != #{id}
+    </select>
+    <select id="findByName" resultType="com.echo.crm.entry.Product">
+      select *
+      from tbl_product
+      where name = #{name}
+    </select>
+    <select id="findProducts" resultType="com.echo.crm.entry.Product">
+        select *
+        from tbl_product
+        <if test="key != null and key != ''">
+            where id = #{key}
+              or name like concat('%', #{key},'%')
+        </if>
+        order by id desc
+    </select>
+</mapper>

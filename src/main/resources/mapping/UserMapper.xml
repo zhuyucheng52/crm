@@ -35,8 +35,10 @@
         </if>
         order by id asc
     </select>
-    <select id="getByAccount" resultType="com.echo.crm.entry.User">
-       select * from tbl_user where account = #{account}
+    <select id="findByAccount" resultType="com.echo.crm.entry.User">
+       select *
+       from tbl_user
+       where account = #{account}
     </select>
 
     <insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="com.echo.crm.entry.User">

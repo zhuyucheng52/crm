@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
     public User add(User user) {
         String account = user.getAccount();
         Assert.isTrue(StringUtils.isNotBlank(account), "账户不能为空");
-        User u = userMapper.getByAccount(account);
+        User u = userMapper.findByAccount(account);
         Assert.isNull(u, "账户已存在");
 
         userMapper.add(user);

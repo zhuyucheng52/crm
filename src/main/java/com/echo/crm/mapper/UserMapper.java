@@ -4,7 +4,7 @@ import com.echo.crm.entry.User;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.data.repository.query.Param;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @author yucheng
@@ -14,13 +14,13 @@ import org.springframework.data.repository.query.Param;
 
 @Mapper
 public interface UserMapper {
-    User findById(Long id);
+    User findById(@Param("id") Long id);
 
-    PageList<User> findUsers(String key, PageBounds pageBounds);
+    PageList<User> findUsers(@Param("key") String key, @Param("pageBounds") PageBounds pageBounds);
 
     void add(User user);
 
-    User getByAccount(@Param("account") String account);
+    User findByAccount(@Param("account") String account);
 
     int update(User u);
 }
