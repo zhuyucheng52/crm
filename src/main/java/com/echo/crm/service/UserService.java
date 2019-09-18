@@ -13,7 +13,7 @@ import com.github.miemiedev.mybatis.paginator.domain.PageList;
 public interface UserService {
     User getUserById(Long id);
 
-    PageList<User> getUsers(PageBounds pageBounds);
+    PageList<User> getUsers(String key, PageBounds pageBounds);
 
     User add(User user);
 

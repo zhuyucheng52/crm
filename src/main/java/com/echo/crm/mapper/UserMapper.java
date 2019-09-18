@@ -16,7 +16,7 @@ import org.springframework.data.repository.query.Param;
 public interface UserMapper {
     User findById(Long id);
 
-    PageList<User> findUsers(PageBounds pageBounds);
+    PageList<User> findUsers(String key, PageBounds pageBounds);
 
     void add(User user);
 

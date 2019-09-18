@@ -30,8 +30,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PageList<User> getUsers(PageBounds pageBounds) {
-        return userMapper.findUsers(pageBounds);
+    public PageList<User> getUsers(String key, PageBounds pageBounds) {
+        return userMapper.findUsers(key, pageBounds);
     }
 
     @Override

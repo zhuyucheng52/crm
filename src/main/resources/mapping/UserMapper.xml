@@ -25,7 +25,15 @@
     </select>
 
     <select id="findUsers" resultType="com.echo.crm.entry.User">
-        select * from tbl_user order by id asc
+        select id, name, sex, birthday, mobile, address, email, remark, account, user_id
+        from tbl_user
+        <if test="key != null and key != ''">
+            where id = #{key}
+              or account = #{key}
+              or name like concat('%', #{key},'%')
+              or mobile like concat('%', #{key},'%')
+        </if>
+        order by id asc
     </select>
     <select id="getByAccount" resultType="com.echo.crm.entry.User">
        select * from tbl_user where account = #{account}

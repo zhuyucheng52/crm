@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 
 /**
  * @author yucheng
@@ -35,8 +35,9 @@ public class UserController {
     }
 
     @GetMapping("/users/{page:\\d+}")
-    public ResultDTO<Page<User>> getUser(@PathVariable("page") Integer page) {
-        PageList<User> users = userService.getUsers(new PageBounds(page, 20));
+    public ResultDTO<Page<User>> getUser(@PathVariable("page") Integer page,
+                                         @RequestParam(value = "key", required = false) String key) {
+        PageList<User> users = userService.getUsers(key, new PageBounds(page, 20));
         return ResultDTO.createResult(new Page(users, users.getPaginator()));
     }
 
