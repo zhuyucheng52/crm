@@ -6,6 +6,7 @@ import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Product add(Product product) {
         List<Product> p = productMapper.findByName(product.getName());
         Assert.isTrue(p.isEmpty(), "产品名已存在");
@@ -38,6 +40,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Product update(Product product) {
         Long id = product.getId();
         Assert.notNull(id, "商品ID不能为空");

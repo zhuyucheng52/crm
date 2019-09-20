@@ -2,6 +2,8 @@ package com.echo.crm.entry;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * @author yucheng
  * @description
@@ -10,9 +12,8 @@ import lombok.Data;
 
 @Data
 public class Product extends BaseEntry {
-    private Long id;
+    @NotNull(message = "产品名称不能为空")
     private String name;
+    @NotNull(message = "产品状态不能为空")
     private Integer disabled;
-    private String remark;
-    private Long userId;
 }

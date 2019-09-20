@@ -1,4 +1,4 @@
-package com.echo.crm.dto;
+package com.echo.crm.utils;
 
 import lombok.Data;
 
@@ -9,7 +9,7 @@ import lombok.Data;
  */
 
 @Data
-public class ResultDTO<T> {
+public class ResultInfo<T> {
 
     public static enum Result {
         RESULT_SUCCESS(Integer.valueOf(1)),
@@ -45,45 +45,45 @@ public class ResultDTO<T> {
      */
     private String errorMsg;
 
-    public ResultDTO(T data) {
+    public ResultInfo(T data) {
         this.success = Result.RESULT_SUCCESS.getValue();
         this.data = data;
     }
 
-    public ResultDTO(Result result) {
+    public ResultInfo(Result result) {
         this.success = result.getValue();
     }
 
-    public ResultDTO(Result result, String errorMsg) {
+    public ResultInfo(Result result, String errorMsg) {
         this.success = result.getValue();
         this.errorMsg = errorMsg;
     }
 
-    public ResultDTO(String errorMsg) {
+    public ResultInfo(String errorMsg) {
         this.success = Result.RESULT_FAILURE.getValue();
         this.errorMsg = errorMsg;
     }
 
-    public ResultDTO(Exception e) {
+    public ResultInfo(Exception e) {
         this.success = Result.RESULT_FAILURE.getValue();
         this.errorMsg = e.getMessage();
     }
 
     /**
-     * 生成ResultDTO对象
+     * 生成Result对象
      * @param obj
      * @param <T>
      * @return
      */
-    public static <T> ResultDTO<T> createResult(T obj) {
-        return new ResultDTO<>(obj);
+    public static <T> ResultInfo<T> createResult(T obj) {
+        return new ResultInfo<>(obj);
     }
 
     /**
      * 生成没有结果的ResultDTO对象
      * @return
      */
-    public static ResultDTO<Object> createEmptyResult() {
-        return new ResultDTO<Object>(Result.RESULT_SUCCESS);
+    public static ResultInfo<Object> createEmptyResult() {
+        return new ResultInfo<Object>(Result.RESULT_SUCCESS);
     }
 }

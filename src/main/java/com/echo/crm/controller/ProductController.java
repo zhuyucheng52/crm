@@ -1,6 +1,6 @@
 package com.echo.crm.controller;
 
-import com.echo.crm.dto.ResultDTO;
+import com.echo.crm.utils.ResultInfo;
 import com.echo.crm.entry.Product;
 import com.echo.crm.service.ProductService;
 import com.echo.crm.utils.Page;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import javax.validation.Valid;
 
 /**
  * @author yucheng
@@ -31,26 +31,26 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping("/product")
-    public ResultDTO<Product> addProduct(@RequestBody Product product) {
-        return ResultDTO.createResult(productService.add(product));
+    public ResultInfo<Product> addProduct(@Valid @RequestBody Product product) {
+        return ResultInfo.createResult(productService.add(product));
     }
 
     @GetMapping("/product/{id:\\d+}")
-    public ResultDTO<Product> getProduct(@PathVariable("id") Long id) {
-        return ResultDTO.createResult(productService.getById(id));
+    public ResultInfo<Product> getProduct(@PathVariable("id") Long id) {
+        return ResultInfo.createResult(productService.getById(id));
     }
 
     @PutMapping("/product")
-    public ResultDTO<Product> modifyProduct(@RequestBody Product product) {
-        return ResultDTO.createResult(productService.update(product));
+    public ResultInfo<Product> modifyProduct(@RequestBody Product product) {
+        return ResultInfo.createResult(productService.update(product));
     }
 
 
     @GetMapping("/products")
-    public ResultDTO<Page<Product>> getProducts(@RequestParam(value = "page", required = false) Integer page,
-                                                @RequestParam(value = "limit", required = false) Integer limit,
-                                                @RequestParam(value = "key", required = false) String key) {
+    public ResultInfo<Page<Product>> getProducts(@RequestParam(value = "page", required = false) Integer page,
+                                                 @RequestParam(value = "limit", required = false) Integer limit,
+                                                 @RequestParam(value = "q", required = false) String key) {
         PageList<Product> products = productService.getProducts(key, PageUtils.createPageBounds(page, limit));
-        return ResultDTO.createResult(PageUtils.createPage(products));
+        return ResultInfo.createResult(PageUtils.createPage(products));
     }
 }

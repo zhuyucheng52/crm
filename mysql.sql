@@ -13,11 +13,12 @@ create table if not exists tbl_order (
     status int not null default 0 comment '订单状态:0. 等待买家付款; 1. 交易成功',
     address varchar(255) comment '地址',
     remark text comment '备注信息',
+    customer_id bigint comment '客户ID',
     customer_name varchar(255) comment '客户名称',
     customer_mobile varchar(15) comment '客户电话',
 
     approver_id bigint not null comment '审批人',
-    approver_status int not null default 0 comment '审批状态:0. 未审批; 1. 拒绝; 2. 审批通过',
+    approve_status int not null default 0 comment '审批状态:0. 未审批; 1. 拒绝; 2. 审批通过',
     approver_remark text comment '审批人备注',
 
     user_id bigint not null comment '记录人',

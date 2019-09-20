@@ -10,5 +10,8 @@ import lombok.Data;
 
 @Data
 public class BaseEntry {
+    private Long id;
+    private String remark;
     private Long tenantId;
+    private Long userId;
 }

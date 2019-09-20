@@ -1,6 +1,6 @@
 package com.echo.crm.exception;
 
-import com.echo.crm.dto.ResultDTO;
+import com.echo.crm.utils.ResultInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ExceptionAdvice {
     @ExceptionHandler({ Exception.class })
     @ResponseBody
-    public ResultDTO<Object> handleException(Exception e) {
+    public ResultInfo<Object> handleException(Exception e) {
         log.warn("Controller process error!", e);
-        return new ResultDTO(ResultDTO.Result.RESULT_FAILURE, e.getMessage());
+        return new ResultInfo(ResultInfo.Result.RESULT_FAILURE, e.getMessage());
     }
 }
