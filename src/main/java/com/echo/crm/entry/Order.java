@@ -2,6 +2,7 @@ package com.echo.crm.entry;
 
 import lombok.Data;
 
+import javax.persistence.Table;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
@@ -13,6 +14,7 @@ import javax.validation.constraints.PositiveOrZero;
  */
 
 @Data
+@Table(name = "tbl_order")
 public class Order extends BaseEntry {
     /**
      * 等待审批
@@ -41,7 +43,8 @@ public class Order extends BaseEntry {
     private Long customerId;
     private String customerName;
     private String customerMobile;
-    private Long approverId;
+    private Long approveId;
+    @NotNull(message = "审批状态不能为空")
     private Integer approveStatus;
-    private String approverRemark;
+    private String approveRemark;
 }

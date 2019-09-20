@@ -1,11 +1,10 @@
 package com.echo.crm.controller;
 
-import com.echo.crm.dto.PasswordModifyDTO;
-import com.echo.crm.utils.ResultInfo;
 import com.echo.crm.entry.User;
 import com.echo.crm.service.UserService;
 import com.echo.crm.utils.Page;
 import com.echo.crm.utils.PageUtils;
+import com.echo.crm.utils.ResultInfo;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,38 +27,34 @@ import javax.validation.Valid;
 
 @Slf4j
 @RestController
-public class UserController {
+public class UserController implements BaseController<User> {
     @Autowired
     private UserService userService;
 
+    @Override
     @GetMapping("/user/{id:\\d+}")
-    public ResultInfo<User> getUser(@PathVariable("id") Long id) {
-        return ResultInfo.createResult(userService.getUserById(id));
+    public ResultInfo<User> findById(@PathVariable("id") Long id) {
+        return ResultInfo.createResult(userService.findById(id));
     }
 
+    @Override
     @GetMapping("/users")
-    public ResultInfo<Page<User>> getUser(@RequestParam(value = "page", required = false) Integer page,
-                                          @RequestParam(value = "limit", required = false) Integer limit,
-                                          @RequestParam(value = "q", required = false) String key) {
-        PageList<User> users = userService.getUsers(key, PageUtils.createPageBounds(page, limit));
+    public ResultInfo<Page<User>> findByKeyword(@RequestParam(value = "page", required = false) Integer page,
+                                                @RequestParam(value = "limit", required = false) Integer limit,
+                                                @RequestParam(value = "q", required = false) String key) {
+        PageList<User> users = userService.findByKeyword(key, PageUtils.createPageBounds(page, limit));
         return ResultInfo.createResult(PageUtils.createPage(users));
     }
 
+    @Override
     @PostMapping("/user")
-    public ResultInfo<User> addUser(@Valid @RequestBody User user) {
+    public ResultInfo<User> add(@Valid @RequestBody User user) {
         return ResultInfo.createResult(userService.add(user));
     }
 
+    @Override
     @PutMapping("/user")
-    public ResultInfo<User> modifyUser(@RequestBody User user) {
+    public ResultInfo<User> update(@RequestBody User user) {
         return ResultInfo.createResult(userService.update(user));
     }
-
-    @PutMapping("/user/password/{id:\\d+}")
-    public ResultInfo<Object> modifyPassword(@PathVariable("id") Long id,
-                                             @RequestBody PasswordModifyDTO password) {
-        userService.updatePassword(id, password.getOldPassword(), password.getNewPassword());
-        return ResultInfo.createEmptyResult();
-    }
-
 }

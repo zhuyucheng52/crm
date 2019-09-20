@@ -1,6 +1,6 @@
 package com.echo.crm.service;
 
-import com.echo.crm.entry.Product;
+import com.echo.crm.entry.AfterSale;
 
 /**
  * @author yucheng
@@ -8,5 +8,5 @@ import com.echo.crm.entry.Product;
  * @create 2019-09-17 09:42
  */
 
-public interface ProductService  extends  BaseService<Product> {
+public interface AfterSaleService extends BaseService<AfterSale> {
 }

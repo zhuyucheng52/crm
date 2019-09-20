@@ -17,9 +17,9 @@ create table if not exists tbl_order (
     customer_name varchar(255) comment '客户名称',
     customer_mobile varchar(15) comment '客户电话',
 
-    approver_id bigint not null comment '审批人',
+    approve_id bigint not null comment '审批人',
     approve_status int not null default 0 comment '审批状态:0. 未审批; 1. 拒绝; 2. 审批通过',
-    approver_remark text comment '审批人备注',
+    approve_remark text comment '审批人备注',
 
     user_id bigint not null comment '记录人',
 
@@ -87,9 +87,9 @@ create table if not exists tbl_purchase (
     remark text comment '备注',
     purcase_user_id bigint comment '采购人',
 
-    approver_id bigint not null comment '审批人',
-    approver_status int not null default 0 comment '审批状态:0. 未审批; 1. 拒绝; 2. 审批通过',
-    approver_remark text comment '审批人备注',
+    approve_id bigint not null comment '审批人',
+    approve_status int not null default 0 comment '审批状态:0. 未审批; 1. 拒绝; 2. 审批通过',
+    approve_remark text comment '审批人备注',
 
     user_id bigint not null comment '录入人',
 
@@ -113,9 +113,9 @@ create table if not exists tbl_finance (
     finance_user_id bigint not null comment '用户ID',
     remark text comment '备注',
 
-    approver_id bigint not null comment '审批人',
-    approver_status int not null default 0 comment '审批状态:0. 未审批; 1. 拒绝; 2. 审批通过',
-    approver_remark text comment '审批人备注',
+    approve_id bigint not null comment '审批人',
+    approve_status int not null default 0 comment '审批状态:0. 未审批; 1. 拒绝; 2. 审批通过',
+    approve_remark text comment '审批人备注',
 
     user_id bigint not null comment '录入人',
 
@@ -137,9 +137,9 @@ create table if not exists tbl_after_sale (
     payment decimal(12, 2) not null default 0 comment '费用',
     remark text comment '备注',
 
-    approver_id bigint not null comment '审批人',
-    approver_status int not null default 0 comment '审批状态:0. 未审批; 1. 拒绝; 2. 审批通过',
-    approver_remark text comment '审批人备注',
+    approve_id bigint not null comment '审批人',
+    approve_status int not null default 0 comment '审批状态:0. 未审批; 1. 拒绝; 2. 审批通过',
+    approve_remark text comment '审批人备注',
 
     user_id bigint not null comment '录入人',
 

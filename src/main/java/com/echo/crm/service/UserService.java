@@ -10,14 +10,12 @@ import com.github.miemiedev.mybatis.paginator.domain.PageList;
  * @create 2019-09-17 09:42
  */
 
-public interface UserService {
-    User getUserById(Long id);
-
-    PageList<User> getUsers(String key, PageBounds pageBounds);
-
-    User add(User user);
-
-    User update(User user);
-
-    void updatePassword(Long id, String oldPassword, String newPassword);
+public interface UserService extends BaseService<User> {
+//    User getUserById(Long id);
+//
+//    PageList<User> getUsers(String key, PageBounds pageBounds);
+//
+//    User addUser(User user);
+//
+//    User updateUser(User user);
 }

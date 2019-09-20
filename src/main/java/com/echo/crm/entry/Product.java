@@ -2,6 +2,7 @@ package com.echo.crm.entry;
 
 import lombok.Data;
 
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -11,6 +12,7 @@ import javax.validation.constraints.NotNull;
  */
 
 @Data
+@Table(name = "tbl_product")
 public class Product extends BaseEntry {
     @NotNull(message = "产品名称不能为空")
     private String name;

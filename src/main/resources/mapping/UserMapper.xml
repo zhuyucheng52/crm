@@ -20,7 +20,7 @@
         select * from tbl_user where id = #{id}
     </select>
 
-    <select id="findUsers" resultType="com.echo.crm.entry.User">
+    <select id="selectByKeyword" resultType="com.echo.crm.entry.User">
         select id, name, sex, birthday, mobile, address, email, remark, account, user_id
         from tbl_user
         <if test="key != null and key != ''">
@@ -31,7 +31,7 @@
         </if>
         order by id asc
     </select>
-    <select id="findByAccount" resultType="com.echo.crm.entry.User">
+    <select id="selectByAccount" resultType="com.echo.crm.entry.User">
        select *
        from tbl_user
        where account = #{account}

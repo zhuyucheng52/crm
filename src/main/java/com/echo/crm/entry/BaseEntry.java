@@ -2,6 +2,11 @@ package com.echo.crm.entry;
 
 import lombok.Data;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import java.io.Serializable;
+
 /**
  * @author yucheng
  * @description
@@ -9,9 +14,11 @@ import lombok.Data;
  */
 
 @Data
-public class BaseEntry {
+public class BaseEntry implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String remark;
-    private Long tenantId;
-    private Long userId;
+    private Long tenantId = 0L;
+    private Long userId = 0L;
 }

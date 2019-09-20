@@ -1,10 +1,10 @@
 package com.echo.crm.controller;
 
-import com.echo.crm.utils.ResultInfo;
 import com.echo.crm.entry.Product;
 import com.echo.crm.service.ProductService;
 import com.echo.crm.utils.Page;
 import com.echo.crm.utils.PageUtils;
+import com.echo.crm.utils.ResultInfo;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,31 +26,35 @@ import javax.validation.Valid;
 
 @Slf4j
 @RestController
-public class ProductController {
+public class ProductController implements BaseController<Product> {
     @Autowired
     private ProductService productService;
 
+    @Override
     @PostMapping("/product")
-    public ResultInfo<Product> addProduct(@Valid @RequestBody Product product) {
+    public ResultInfo<Product> add(@Valid @RequestBody Product product) {
         return ResultInfo.createResult(productService.add(product));
     }
 
+    @Override
     @GetMapping("/product/{id:\\d+}")
-    public ResultInfo<Product> getProduct(@PathVariable("id") Long id) {
-        return ResultInfo.createResult(productService.getById(id));
+    public ResultInfo<Product> findById(@PathVariable("id") Long id) {
+        return ResultInfo.createResult(productService.findById(id));
     }
 
+    @Override
     @PutMapping("/product")
-    public ResultInfo<Product> modifyProduct(@RequestBody Product product) {
+    public ResultInfo<Product> update(@RequestBody Product product) {
         return ResultInfo.createResult(productService.update(product));
     }
 
 
+    @Override
     @GetMapping("/products")
-    public ResultInfo<Page<Product>> getProducts(@RequestParam(value = "page", required = false) Integer page,
-                                                 @RequestParam(value = "limit", required = false) Integer limit,
-                                                 @RequestParam(value = "q", required = false) String key) {
-        PageList<Product> products = productService.getProducts(key, PageUtils.createPageBounds(page, limit));
+    public ResultInfo<Page<Product>> findByKeyword(@RequestParam(value = "page", required = false) Integer page,
+                                                   @RequestParam(value = "limit", required = false) Integer limit,
+                                                   @RequestParam(value = "q", required = false) String key) {
+        PageList<Product> products = productService.findByKeyword(key, PageUtils.createPageBounds(page, limit));
         return ResultInfo.createResult(PageUtils.createPage(products));
     }
 }

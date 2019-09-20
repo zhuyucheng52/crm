@@ -24,9 +24,9 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public Product getById(Long id) {
+    public Product findById(Long id) {
         Assert.notNull(id, "ID不能为空");
-        return productMapper.findById(id);
+        return productMapper.selectByPrimaryKey(id);
     }
 
     @Override
@@ -34,34 +34,32 @@ public class ProductServiceImpl implements ProductService {
     public Product add(Product product) {
         List<Product> p = productMapper.findByName(product.getName());
         Assert.isTrue(p.isEmpty(), "产品名已存在");
-        productMapper.add(product);
+        productMapper.insertSelective(product);
 
-        return getById(product.getId());
+        return productMapper.selectByPrimaryKey(product.getId());
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Product update(Product product) {
         Long id = product.getId();
-        Assert.notNull(id, "商品ID不能为空");
-        Product p = getById(id);
-        if (product.getDisabled() != null) {
-            p.setDisabled(product.getDisabled());
-        }
+        Product p = findById(id);
         if (product.getName() != null) {
             Assert.isTrue(productMapper.findOtherByName(id, product.getName()).isEmpty(), "产品名已存在");
-            p.setName(product.getName());
-        }
-        if (product.getRemark() != null) {
-            p.setRemark(product.getRemark());
         }
 
-        productMapper.update(p);
-        return getById(id);
+        productMapper.updateByPrimaryKeySelective(product);
+        return productMapper.selectByPrimaryKey(id);
     }
 
     @Override
-    public PageList<Product> getProducts(String key, PageBounds pageBounds) {
-        return productMapper.findProducts(key, pageBounds);
+    public Product delete(Long id) {
+        // TODO yucheng
+        return null;
+    }
+
+    @Override
+    public PageList<Product> findByKeyword(String key, PageBounds pageBounds) {
+        return productMapper.selectByKeyword(key, pageBounds);
     }
 }

@@ -1,10 +1,10 @@
 package com.echo.crm.controller;
 
-import com.echo.crm.utils.ResultInfo;
 import com.echo.crm.entry.Order;
 import com.echo.crm.service.OrderService;
 import com.echo.crm.utils.Page;
 import com.echo.crm.utils.PageUtils;
+import com.echo.crm.utils.ResultInfo;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,30 +27,34 @@ import javax.validation.Valid;
 
 @Slf4j
 @RestController
-public class OrderController {
+public class OrderController implements BaseController<Order> {
     @Autowired
     private OrderService orderService;
 
+    @Override
     @GetMapping("/order/{id:\\d+}")
-    public ResultInfo<Order> getOrder(@PathVariable("id") Long id) {
-        return ResultInfo.createResult(orderService.getOrderById(id));
+    public ResultInfo<Order> findById(@PathVariable("id") Long id) {
+        return ResultInfo.createResult(orderService.findById(id));
     }
 
+    @Override
     @GetMapping("/orders")
-    public ResultInfo<Page<Order>> getOrder(@RequestParam(value = "page", required = false) Integer page,
-                                            @RequestParam(value = "limit", required = false) Integer limit,
-                                            @RequestParam(value = "q", required = false) String key) {
-        PageList<Order> orders = orderService.getOrders(key, PageUtils.createPageBounds(page, limit));
+    public ResultInfo<Page<Order>> findByKeyword(@RequestParam(value = "page", required = false) Integer page,
+                                                 @RequestParam(value = "limit", required = false) Integer limit,
+                                                 @RequestParam(value = "q", required = false) String key) {
+        PageList<Order> orders = orderService.findByKeyword(key, PageUtils.createPageBounds(page, limit));
         return ResultInfo.createResult(PageUtils.createPage(orders));
     }
 
+    @Override
     @PostMapping("/order")
-    public ResultInfo<Order> addOrder(@Valid @RequestBody Order order) {
+    public ResultInfo<Order> add(@Valid @RequestBody Order order) {
         return ResultInfo.createResult(orderService.add(order));
     }
 
+    @Override
     @PutMapping("/order")
-    public ResultInfo<Order> modifyOrder(@RequestBody Order order) {
+    public ResultInfo<Order> update(@RequestBody Order order) {
         return ResultInfo.createResult(orderService.update(order));
     }
 
