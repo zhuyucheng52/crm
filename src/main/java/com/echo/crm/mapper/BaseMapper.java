@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package com.echo.crm.utils;
+package com.echo.crm.mapper;
 
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;

@@ -16,6 +16,7 @@ create table if not exists tbl_order (
     customer_id bigint comment '客户ID',
     customer_name varchar(255) comment '客户名称',
     customer_mobile varchar(15) comment '客户电话',
+    disabled int not null default 0 comment '是否禁用',
 
     approve_id bigint not null comment '审批人',
     approve_status int not null default 0 comment '审批状态:0. 未审批; 1. 拒绝; 2. 审批通过',
@@ -45,6 +46,7 @@ create table if not exists tbl_user (
 
     account varchar(64) not null comment '账户',
     password varchar(64) not null comment '密码',
+    disabled int not null defualt 0 comment '是否禁用',
 
     user_id bigint not null comment '记录人',
 
@@ -86,6 +88,7 @@ create table if not exists tbl_purchase (
     payment decimal(12, 2) comment '采购费用',
     remark text comment '备注',
     purcase_user_id bigint comment '采购人',
+    disabled int not null default 0 comment '是否禁用',
 
     approve_id bigint not null comment '审批人',
     approve_status int not null default 0 comment '审批状态:0. 未审批; 1. 拒绝; 2. 审批通过',
@@ -112,6 +115,7 @@ create table if not exists tbl_finance (
     payment decimal(12, 2) not null default 0 comment '金额',
     finance_user_id bigint not null comment '用户ID',
     remark text comment '备注',
+    disabled int not null default 0 comment '状态: 1. 禁用; 0. 启用',
 
     approve_id bigint not null comment '审批人',
     approve_status int not null default 0 comment '审批状态:0. 未审批; 1. 拒绝; 2. 审批通过',
@@ -136,6 +140,7 @@ create table if not exists tbl_after_sale (
     name varchar(255) comment '名称',
     payment decimal(12, 2) not null default 0 comment '费用',
     remark text comment '备注',
+    disabled int not null default 0 comment '状态: 1. 禁用; 0. 启用',
 
     approve_id bigint not null comment '审批人',
     approve_status int not null default 0 comment '审批状态:0. 未审批; 1. 拒绝; 2. 审批通过',

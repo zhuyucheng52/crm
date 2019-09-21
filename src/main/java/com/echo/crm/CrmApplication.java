@@ -7,7 +7,7 @@ import tk.mybatis.spring.annotation.MapperScan;
 //@EnableWebMvc
 @SpringBootApplication
 //@EnableTransactionManagement
-@MapperScan(basePackages = "com.echo.crm.mapper")
+//@MapperScan(basePackages = "com.echo.crm.mapper")
 public class CrmApplication {
 
     public static void main(String[] args) {

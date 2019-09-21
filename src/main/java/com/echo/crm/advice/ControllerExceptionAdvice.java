@@ -1,4 +1,4 @@
-package com.echo.crm.exception;
+package com.echo.crm.advice;
 
 import com.echo.crm.utils.ResultInfo;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
 @RestControllerAdvice
-public class ExceptionAdvice {
+public class ControllerExceptionAdvice {
     @ExceptionHandler({ Exception.class })
     @ResponseBody
     public ResultInfo<Object> handleException(Exception e) {

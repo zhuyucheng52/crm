@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.List;
+
 /**
  * @author yucheng
  * @description
@@ -37,8 +39,8 @@ public class UserServiceImpl implements UserService {
     public User add(User user) {
         String account = user.getAccount();
         Assert.isTrue(StringUtils.isNotBlank(account), "账户不能为空");
-        User u = userMapper.selectByAccount(account);
-        Assert.isNull(u, "账户已存在");
+        List<User> sameAccountUsers = userMapper.selectByAccount(account);
+        Assert.isTrue(sameAccountUsers.isEmpty(), "账户已存在");
 
         userMapper.insertSelective(user);
         return userMapper.selectByPrimaryKey(user.getId());
@@ -48,8 +50,12 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     public User update(User user) {
         Long id = user.getId();
+        String account = user.getAccount();
+
         User u = findById(id);
         Assert.notNull(u, String.format("用户[%s]不存在", id));
+
+        Assert.isTrue(StringUtils.equals(account, u.getAccount()), "账号不能修改");
 
         userMapper.updateByPrimaryKeySelective(user);
         return userMapper.selectByPrimaryKey(id);

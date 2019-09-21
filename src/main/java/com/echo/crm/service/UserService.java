@@ -1,8 +1,6 @@
 package com.echo.crm.service;
 
 import com.echo.crm.entry.User;
-import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
-import com.github.miemiedev.mybatis.paginator.domain.PageList;
 
 /**
  * @author yucheng

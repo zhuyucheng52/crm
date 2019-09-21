@@ -14,8 +14,8 @@ import javax.validation.constraints.NotNull;
 @Data
 @Table(name = "tbl_product")
 public class Product extends BaseEntry {
-    @NotNull(message = "产品名称不能为空")
+    @NotNull(message = "名称不能为空")
     private String name;
-    @NotNull(message = "产品状态不能为空")
+    @NotNull(message = "状态不能为空")
     private Integer disabled;
 }

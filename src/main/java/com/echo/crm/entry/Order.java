@@ -32,9 +32,9 @@ public class Order extends BaseEntry {
     public static final int APPROVE_STATUS_PASS = 2;
 
     private String onlineId;
-    @NotNull(message = "产品ID不能为空")
+    @NotNull(message = "ID不能为空")
     private Long productId;
-    @PositiveOrZero(message = "产品数量非法")
+    @PositiveOrZero(message = "数量非法")
     private Integer productNum;
     @DecimalMin(value = "0.0", message = "实付金额非法")
     private Double payment;
@@ -47,4 +47,5 @@ public class Order extends BaseEntry {
     @NotNull(message = "审批状态不能为空")
     private Integer approveStatus;
     private String approveRemark;
+    private Integer disabled;
 }
