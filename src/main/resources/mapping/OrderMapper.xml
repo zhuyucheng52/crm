@@ -1,34 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.echo.crm.mapper.OrderMapper">
-    <!--<add id="addUser" useGeneratedKeys="true" keyProperty="id">-->
-        <!--add into tbl_order(online_id, product_id, product_num, payment, status, address, remark, customer_id, approve_id, approve_status, approve_remark, user_id, tenant_id, create_time, update_time)-->
-        <!--values (#{onlineId}, #{productId}, #{productNum}, #{payment}, #{status}, #{address}, #{remark}, #{customerId}, #{approveId}, #{approveStatus}, #{approveRemark}, #{userId}, #{tenantId}, now(), now())-->
-    <!--</add>-->
-    <!--<updateUser id="updateUser">-->
-        <!--updateUser tbl_order-->
-        <!--set remark = #{remark},-->
-          <!--payment = #{payment},-->
-          <!--address = #{address},-->
-          <!--product_num = #{productNum},-->
-          <!--approve_remark = #{approveRemark},-->
-          <!--approve_status = #{approveStatus},-->
-          <!--status = #{status},-->
-          <!--update_time = now()-->
-        <!--where id = #{id}-->
-    <!--</updateUser>-->
-
-    <!--<select id="findById" resultType="com.echo.crm.entry.Order">-->
-        <!--select *-->
-        <!--from tbl_order-->
-        <!--where id = #{id}-->
-    <!--</select>-->
-
     <select id="selectByKeyword" resultType="com.echo.crm.entry.Order">
         select *
         from tbl_order
+        where disabled = 0
         <if test="key != null and key != ''">
-            where id = #{key}
+            and id = #{key}
         </if>
         order by id desc
     </select>

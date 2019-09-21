@@ -15,9 +15,11 @@
     <select id="selectByKeyword" resultType="com.echo.crm.entry.Product">
         select *
         from tbl_product
+        where disabled = 0
         <if test="key != null and key != ''">
-            where id = #{key}
+            and (id = #{key}
               or name like concat('%', #{key},'%')
+            )
         </if>
         order by id desc
     </select>

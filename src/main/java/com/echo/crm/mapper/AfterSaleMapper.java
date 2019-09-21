@@ -14,5 +14,4 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface AfterSaleMapper extends BaseMapper<AfterSale> {
-    PageList<AfterSale> findAfterSales(@Param("key") String key, @Param("pageBounds") PageBounds pageBounds);
 }

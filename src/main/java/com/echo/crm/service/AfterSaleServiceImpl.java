@@ -22,13 +22,13 @@ public class AfterSaleServiceImpl implements AfterSaleService {
 
     @Override
     public AfterSale findById(Long id) {
-        Assert.notNull(id, "用户ID不能为空");
+        Assert.notNull(id, "售后ID不能为空");
         return aftersaleMapper.selectByPrimaryKey(id);
     }
 
     @Override
     public PageList<AfterSale> findByKeyword(String key, PageBounds pageBounds) {
-        return aftersaleMapper.findAfterSales(key, pageBounds);
+        return aftersaleMapper.selectByKeyword(key, pageBounds);
     }
 
     @Override
@@ -42,8 +42,7 @@ public class AfterSaleServiceImpl implements AfterSaleService {
     @Transactional(rollbackFor = Exception.class)
     public AfterSale update(AfterSale aftersale) {
         Long id = aftersale.getId();
-        Assert.notNull(id, "用户ID不能为空");
-        AfterSale as = aftersaleMapper.selectByPrimaryKey(id);
+        AfterSale as = findById(id);
         Assert.notNull(as, String.format("售后记录[%s]不存在", id));
         aftersaleMapper.updateByPrimaryKeySelective(aftersale);
 

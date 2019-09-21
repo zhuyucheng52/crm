@@ -1,33 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.echo.crm.mapper.UserMapper">
-
-    <update id="update">
-        update tbl_user
-        set name = #{name},
-          sex = #{sex},
-          birthday = #{birthday},
-          mobile = #{mobile},
-          address = #{address},
-          email = #{email},
-          remark = #{remark},
-          password = #{password},
-          update_time = now()
-        where id = #{id}
-    </update>
-
-    <select id="findById" resultType="com.echo.crm.entry.User">
-        select * from tbl_user where id = #{id}
-    </select>
-
     <select id="selectByKeyword" resultType="com.echo.crm.entry.User">
         select id, name, sex, birthday, mobile, address, email, remark, account, user_id
         from tbl_user
+        where disabled = 0
         <if test="key != null and key != ''">
-            where id = #{key}
-              or account = #{key}
-              or name like concat('%', #{key},'%')
-              or mobile like concat('%', #{key},'%')
+            and (id = #{key}
+                or account = #{key}
+                or name like concat('%', #{key},'%')
+                or mobile like concat('%', #{key},'%')
+            )
         </if>
         order by id asc
     </select>
@@ -36,9 +19,4 @@
        from tbl_user
        where account = #{account}
     </select>
-
-    <insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="com.echo.crm.entry.User">
-        insert into tbl_user(name, sex, birthday, mobile, address, email, remark, account, password, user_id, tenant_id, create_time, update_time) values
-        (#{name}, #{sex}, #{birthday}, #{mobile}, #{address}, #{email}, #{remark}, #{account}, #{password}, #{userId}, #{tenantId}, now(), now())
-    </insert>
 </mapper>
