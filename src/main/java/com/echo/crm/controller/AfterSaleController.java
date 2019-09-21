@@ -8,6 +8,7 @@ import com.echo.crm.utils.ResultInfo;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,8 +40,8 @@ public class AfterSaleController implements BaseController<AfterSale> {
 
     @Override
     @GetMapping("/aftersales")
-    public ResultInfo<Page<AfterSale>> findByKeyword(@RequestParam(value = "page", required = false) Integer page,
-                                                     @RequestParam(value = "limit", required = false) Integer limit,
+    public ResultInfo<Page<AfterSale>> findByKeyword(@RequestParam(value = "page") Integer page,
+                                                     @RequestParam(value = "limit") Integer limit,
                                                      @RequestParam(value = "q", required = false) String key) {
         PageList<AfterSale> aftersales = aftersaleService.findByKeyword(key, PageUtils.createPageBounds(page, limit));
         return ResultInfo.createResult(PageUtils.createPage(aftersales));
@@ -56,5 +57,11 @@ public class AfterSaleController implements BaseController<AfterSale> {
     @PutMapping("/aftersale")
     public ResultInfo<AfterSale> update(@RequestBody AfterSale aftersale) {
         return ResultInfo.createResult(aftersaleService.update(aftersale));
+    }
+
+    @Override
+    @DeleteMapping("/aftersale/{id:\\d+}")
+    public ResultInfo<AfterSale> delete(@PathVariable("id") Long id) {
+        return ResultInfo.createResult(aftersaleService.delete(id));
     }
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.echo.crm.mapper.FinanceMapper">
+    <select id="selectByKeyword" resultType="com.echo.crm.entry.Finance">
+        select *
+        from tbl_finance
+        where disabled = 0
+        <if test="key != null and key != ''">
+            and (id = #{key}
+                or name like concat('%', #{key},'%')
+            )
+        </if>
+        order by id asc
+    </select>
+
+    <select id="selectByType" resultType="com.echo.crm.entry.Finance">
+        select *
+        from tbl_finance
+        where disabled = 0
+          and type = #{type}
+        order by id desc
+    </select>
+</mapper>

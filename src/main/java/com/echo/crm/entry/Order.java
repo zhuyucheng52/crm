@@ -1,6 +1,7 @@
 package com.echo.crm.entry;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.Table;
 import javax.validation.constraints.DecimalMin;
@@ -15,6 +16,7 @@ import javax.validation.constraints.PositiveOrZero;
 
 @Data
 @Table(name = "tbl_order")
+@EqualsAndHashCode(callSuper = false)
 public class Order extends BaseEntry {
     /**
      * 等待审批

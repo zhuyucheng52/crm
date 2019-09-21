@@ -48,6 +48,11 @@ public class ProductController implements BaseController<Product> {
         return ResultInfo.createResult(productService.update(product));
     }
 
+    @Override
+    public ResultInfo<Product> delete(Long id) {
+        return null;
+    }
+
 
     @Override
     @GetMapping("/products")

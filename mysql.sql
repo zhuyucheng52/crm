@@ -111,7 +111,7 @@ create table if not exists tbl_purchase (
 create table if not exists tbl_finance (
     id bigint not null auto_increment,
     name varchar(255) comment '名称',
-    finance_type int not null comment '1. 收入; 2. 支出',
+    `type` int not null default 0 comment '0. 收入; 1. 支出',
     payment decimal(12, 2) not null default 0 comment '金额',
     finance_user_id bigint not null comment '用户ID',
     remark text comment '备注',

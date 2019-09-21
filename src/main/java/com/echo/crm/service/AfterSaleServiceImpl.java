@@ -50,7 +50,12 @@ public class AfterSaleServiceImpl implements AfterSaleService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public AfterSale delete(Long id) {
-        return null;
+        AfterSale as = findById(id);
+        Assert.notNull(as, String.format("售后记录[%s]不存在", id));
+        as.setDisabled(1);
+        aftersaleMapper.updateByPrimaryKeySelective(as);
+        return aftersaleMapper.selectByPrimaryKey(id);
     }
 }

@@ -57,4 +57,9 @@ public class UserController implements BaseController<User> {
     public ResultInfo<User> update(@RequestBody User user) {
         return ResultInfo.createResult(userService.update(user));
     }
+
+    @Override
+    public ResultInfo<User> delete(Long id) {
+        return null;
+    }
 }

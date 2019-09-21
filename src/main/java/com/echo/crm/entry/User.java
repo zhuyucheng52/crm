@@ -1,6 +1,7 @@
 package com.echo.crm.entry;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -14,6 +15,7 @@ import java.util.Date;
 
 @Data
 @Table(name = "tbl_user")
+@EqualsAndHashCode(callSuper = false)
 public class User extends BaseEntry {
     @NotNull(message = "用户名不能为空")
     private String name;

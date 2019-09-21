@@ -39,8 +39,8 @@ public class OrderController implements BaseController<Order> {
 
     @Override
     @GetMapping("/orders")
-    public ResultInfo<Page<Order>> findByKeyword(@RequestParam(value = "page", required = false) Integer page,
-                                                 @RequestParam(value = "limit", required = false) Integer limit,
+    public ResultInfo<Page<Order>> findByKeyword(@RequestParam(value = "page") Integer page,
+                                                 @RequestParam(value = "limit") Integer limit,
                                                  @RequestParam(value = "q", required = false) String key) {
         PageList<Order> orders = orderService.findByKeyword(key, PageUtils.createPageBounds(page, limit));
         return ResultInfo.createResult(PageUtils.createPage(orders));
@@ -56,6 +56,11 @@ public class OrderController implements BaseController<Order> {
     @PutMapping("/order")
     public ResultInfo<Order> update(@RequestBody Order order) {
         return ResultInfo.createResult(orderService.update(order));
+    }
+
+    @Override
+    public ResultInfo<Order> delete(Long id) {
+        return null;
     }
 
 }

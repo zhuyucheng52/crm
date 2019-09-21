@@ -5,29 +5,24 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
 
 /**
  * @author yucheng
  * @description
- * @create 2019-09-17 09:44
+ * @create 2019-09-21 22:03
  */
 
 @Data
-@Table(name = "tbl_after_sale")
+@Table(name = "tbl_finance")
 @EqualsAndHashCode(callSuper = false)
-public class AfterSale extends BaseEntry {
-    private Long id;
-    @NotNull(message = "订单ID不能为空")
-    private Long orderId;
-    @NotNull(message = "名称不能为空")
+public class Finance extends BaseEntry {
     private String name;
-    @PositiveOrZero(message = "金额不能为负数")
+    @NotNull(message = "财务记录类型不能为空")
+    private Integer type;
     private Double payment;
+    private Long financeUserId;
     private Long approveId;
-    @NotNull(message = "审批状态不能为空")
     private Integer approveStatus;
     private String approveRemark;
     private Integer disabled;
-
 }
