@@ -44,6 +44,7 @@ public class ProductServiceImpl implements ProductService {
     public Product update(Product product) {
         Long id = product.getId();
         Product p = findById(id);
+        Assert.notNull(p, String.format("产品[%s]不存在", id));
         if (product.getName() != null) {
             Assert.isTrue(productMapper.findOtherByName(id, product.getName()).isEmpty(), "产品名已存在");
         }
@@ -56,7 +57,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(rollbackFor = Exception.class)
     public Product delete(Long id) {
         Product p = findById(id);
-        Assert.notNull(p, String.format("产品[%s]已存在", id));
+        Assert.notNull(p, String.format("产品[%s]不存在", id));
         p.setDisabled(1);
         productMapper.updateByPrimaryKeySelective(p);
         return productMapper.selectByPrimaryKey(id);

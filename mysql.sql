@@ -34,6 +34,24 @@ create table if not exists tbl_order (
     key `idx_online_id`(online_id)
 ) comment = '订单';
 
+create table if not exists tbl_purchase (
+  id bigint not null auto_increment,
+  product_id bigint comment '产品ID',
+  product_num int comment '产品数量',
+  payment decimal(12,2) comment '实付金额',
+  approve_id bigint not null comment '审批人',
+  approve_status int not null default 0 comment '审批状态： 0. 未审批； 1. 拒绝； 2. 审批通过',
+  approve_remark text comment '审批人备注',
+
+  user_id bigint not null comment '记录人',
+  tenant_id bigint not null comment '租户ID',
+
+  create_time datetime comment '录入时间',
+  update_time datetime comment '更新时间',
+
+  primary key(id)
+) comment = '采购';
+
 create table if not exists tbl_customer (
   id bigint not null auto_increment,
   name varchar(255) not null comment '姓名',
