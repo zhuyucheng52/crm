@@ -53,9 +53,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Product delete(Long id) {
-        // TODO yucheng
-        return null;
+        Product p = findById(id);
+        Assert.notNull(p, String.format("产品[%s]已存在", id));
+        p.setDisabled(1);
+        productMapper.updateByPrimaryKeySelective(p);
+        return productMapper.selectByPrimaryKey(id);
     }
 
     @Override

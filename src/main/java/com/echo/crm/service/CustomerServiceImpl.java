@@ -6,6 +6,7 @@ import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 /**
@@ -26,12 +27,14 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Customer add(Customer customer) {
         customerMapper.insertSelective(customer);
         return customerMapper.selectByPrimaryKey(customer.getId());
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Customer update(Customer customer) {
         Long id = customer.getId();
         Customer u = findById(id);
@@ -42,6 +45,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Customer delete(Long id) {
         Customer customer = findById(id);
         Assert.notNull(customer, String.format("客户[%s]不存在", id));

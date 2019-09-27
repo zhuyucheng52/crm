@@ -2,6 +2,7 @@ package com.echo.crm.utils;
 
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
+import org.springframework.util.Assert;
 
 /**
  * @author yucheng
@@ -16,6 +17,7 @@ public class PageUtils {
         } else if (page != null && limit == null) {
             return new PageBounds(page, Consts.PAGE_SIZE);
         } else if (page == null && limit != null) {
+            Assert.isTrue(limit < 100, "页面数量超过最大值");
             return new PageBounds(limit);
         } else {
             return new PageBounds(page, limit);

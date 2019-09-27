@@ -6,11 +6,13 @@
       from tbl_product
       where name = #{name}
         and id != #{id}
+        and disabled = 0
     </select>
     <select id="findByName" resultType="com.echo.crm.entry.Product">
       select *
       from tbl_product
       where name = #{name}
+        and disabled = 0
     </select>
     <select id="selectByKeyword" resultType="com.echo.crm.entry.Product">
         select *

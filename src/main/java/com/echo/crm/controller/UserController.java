@@ -8,6 +8,7 @@ import com.echo.crm.utils.ResultInfo;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -59,8 +60,8 @@ public class UserController implements BaseController<User> {
     }
 
     @Override
-    public ResultInfo<User> delete(Long id) {
-        // TODO yucheng
-        return null;
+    @DeleteMapping("/user/{id:\\d+}")
+    public ResultInfo<User> delete(@PathVariable("id") Long id) {
+        return ResultInfo.createResult(userService.delete(id));
     }
 }

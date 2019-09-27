@@ -62,8 +62,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public User delete(Long id) {
-        // TODO yucheng
-        return null;
+        User u = findById(id);
+        Assert.notNull(u, "客户不存在");
+        u.setDisabled(1);
+        userMapper.updateByPrimaryKeySelective(u);
+
+        return userMapper.selectByPrimaryKey(id);
     }
 }
