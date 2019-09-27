@@ -60,6 +60,7 @@ public class UserController implements BaseController<User> {
 
     @Override
     public ResultInfo<User> delete(Long id) {
+        // TODO yucheng
         return null;
     }
 }

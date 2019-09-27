@@ -2,12 +2,14 @@ package com.echo.crm;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import tk.mybatis.spring.annotation.MapperScan;
 
-//@EnableWebMvc
+@EnableWebMvc
 @SpringBootApplication
-//@EnableTransactionManagement
-//@MapperScan(basePackages = "com.echo.crm.mapper")
+@EnableTransactionManagement
+@MapperScan(basePackages = "com.echo.crm.mapper")
 public class CrmApplication {
 
     public static void main(String[] args) {

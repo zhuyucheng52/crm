@@ -1,8 +1,9 @@
 package com.echo.crm.mapper;
 
 import com.echo.crm.entry.User;
-import org.apache.ibatis.annotations.Mapper;
+import com.echo.crm.utils.BaseMapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  * @create 2019-09-17 09:43
  */
 
-@Mapper
+@Repository
 public interface UserMapper extends BaseMapper<User> {
     List<User> selectByAccount(@Param("account") String account);
 }
