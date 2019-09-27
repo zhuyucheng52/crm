@@ -34,6 +34,26 @@ create table if not exists tbl_order (
     key `idx_online_id`(online_id)
 ) comment = '订单';
 
+create table if not exists tbl_customer (
+  id bigint not null auto_increment,
+  name varchar(255) not null comment '姓名',
+  mobile varchar(15) comment '手机',
+  address varchar(255) comment '地址',
+  disabled int not null default 0 comment '是否禁用',
+
+  remark text comment '备注信息',
+
+  user_id bigint not null comment '记录人',
+
+  tenant_id bigint not null comment '租户ID',
+
+  create_time datetime comment '录入时间',
+  update_time datetime comment '更新时间',
+
+  primary key(id),
+  key `idx_name`(name)
+) comment = '客户';
+
 create table if not exists tbl_user (
     id bigint not null auto_increment,
     name varchar(255) comment '姓名',
@@ -185,3 +205,4 @@ create table if not exists tbl_user_role(
 
     primary key(user_id, role_id)
 ) comment '用户角色';
+
