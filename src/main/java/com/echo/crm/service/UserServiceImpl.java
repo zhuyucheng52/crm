@@ -1,6 +1,8 @@
 package com.echo.crm.service;
 
+import com.echo.crm.entry.Role;
 import com.echo.crm.entry.User;
+import com.echo.crm.mapper.RoleMapper;
 import com.echo.crm.mapper.UserMapper;
 import com.echo.crm.properties.PasswordProperties;
 import com.echo.crm.utils.PasswordUtils;
@@ -27,12 +29,16 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
 
     @Autowired
+    private RoleMapper roleMapper;
+
+    @Autowired
     private PasswordProperties passwordProperties;
 
     @Override
     public User findById(Long id) {
         Assert.notNull(id, "用户ID不能为空");
-        return userMapper.selectByPrimaryKey(id);
+        User u = userMapper.selectById(id);
+        return u;
     }
 
     @Override
@@ -49,7 +55,7 @@ public class UserServiceImpl implements UserService {
         Assert.isTrue(sameAccountUsers.isEmpty(), "账户已存在");
 
         userMapper.insertSelective(user);
-        return userMapper.selectByPrimaryKey(user.getId());
+        return userMapper.selectById(user.getId());
     }
 
     @Override
@@ -67,7 +73,7 @@ public class UserServiceImpl implements UserService {
         Assert.isTrue(StringUtils.equals(account, u.getAccount()), "账号不能修改");
 
         userMapper.updateByPrimaryKeySelective(user);
-        return userMapper.selectByPrimaryKey(id);
+        return userMapper.selectById(id);
     }
 
     @Override
@@ -78,7 +84,7 @@ public class UserServiceImpl implements UserService {
         u.setDisabled(1);
         userMapper.updateByPrimaryKeySelective(u);
 
-        return userMapper.selectByPrimaryKey(id);
+        return userMapper.selectById(id);
     }
 
     @Override

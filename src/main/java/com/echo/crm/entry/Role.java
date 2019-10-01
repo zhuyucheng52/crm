@@ -8,15 +8,13 @@ import javax.persistence.Table;
 /**
  * @author yucheng
  * @description
- * @create 2019-09-27 10:40
+ * @create 2019-10-01 08:15
  */
 
 @Data
-@Table(name = "tbl_customer")
+@Table(name = "tbl_role")
 @EqualsAndHashCode(callSuper = false)
-public class Customer extends BaseEntry {
+public class Role extends BaseEntry {
     private String name;
-    private String mobile;
-    private String address;
-    private Integer disabled;
+    private String remark;
 }

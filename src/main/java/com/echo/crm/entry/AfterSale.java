@@ -17,7 +17,6 @@ import javax.validation.constraints.PositiveOrZero;
 @Table(name = "tbl_after_sale")
 @EqualsAndHashCode(callSuper = false)
 public class AfterSale extends BaseEntry {
-    private Long id;
     @NotNull(message = "订单ID不能为空")
     private Long orderId;
     @NotNull(message = "名称不能为空")

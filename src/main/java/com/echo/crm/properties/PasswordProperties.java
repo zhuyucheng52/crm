@@ -2,6 +2,7 @@ package com.echo.crm.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 /**
  * @author yucheng
@@ -10,6 +11,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 
 @Data
+@Component
 @ConfigurationProperties(prefix = "user.password.algorithm")
 public class PasswordProperties {
     private String name;

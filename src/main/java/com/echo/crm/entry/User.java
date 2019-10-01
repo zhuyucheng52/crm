@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author yucheng
@@ -31,4 +32,6 @@ public class User extends BaseEntry {
     private String password;
     @NotNull(message = "状态不能为空")
     private Integer disabled;
+
+    private List<Role> roles;
 }

@@ -1,11 +1,10 @@
 package com.echo.crm.mapper;
 
-import com.echo.crm.entry.User;
+import com.echo.crm.entry.Role;
 import com.echo.crm.utils.BaseMapper;
+import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 /**
  * @author yucheng
@@ -14,7 +13,6 @@ import java.util.List;
  */
 
 @Repository
-public interface UserMapper extends BaseMapper<User> {
-    List<User> selectByAccount(@Param("account") String account);
-    User selectById(@Param("id") Long id);
+public interface RoleMapper extends BaseMapper<Role> {
+    PageList<Role> selectByUserId(@Param("userId") Long userId);
 }

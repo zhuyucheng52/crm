@@ -214,7 +214,13 @@ create table if not exists tbl_role(
     id bigint not null auto_increment,
     name varchar(64) not null comment '角色名称',
 
-    primary key(id)
+    remark text comment '备注',
+
+    create_time datetime comment '录入时间',
+    update_time datetime comment '更新时间',
+
+    primary key(id),
+    index `idx_name`(name)
 ) comment = '角色';
 
 create table if not exists tbl_user_role(
