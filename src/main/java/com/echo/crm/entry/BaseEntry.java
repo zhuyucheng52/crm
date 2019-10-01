@@ -20,5 +20,5 @@ public class BaseEntry implements Serializable {
     private Long id;
     private String remark;
     private Long userId = 0L;
-    private Long tenantId = 0L;
+    private String tenantId = "0";
 }

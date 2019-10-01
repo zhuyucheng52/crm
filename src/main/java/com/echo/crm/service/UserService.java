@@ -2,6 +2,8 @@ package com.echo.crm.service;
 
 import com.echo.crm.entry.User;
 
+import java.io.UnsupportedEncodingException;
+
 /**
  * @author yucheng
  * @description
@@ -9,11 +11,5 @@ import com.echo.crm.entry.User;
  */
 
 public interface UserService extends BaseService<User> {
-//    User getUserById(Long id);
-//
-//    PageList<User> getUsers(String key, PageBounds pageBounds);
-//
-//    User addUser(User user);
-//
-//    User updateUser(User user);
+    void updatePassword(Long userId, String newPassword, String oldPassword) throws UnsupportedEncodingException;
 }

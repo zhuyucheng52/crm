@@ -1,5 +1,6 @@
 package com.echo.crm.controller;
 
+import com.echo.crm.dto.PasswordModifyDTO;
 import com.echo.crm.entry.User;
 import com.echo.crm.service.UserService;
 import com.echo.crm.utils.Page;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 
 
 /**
@@ -63,5 +65,17 @@ public class UserController implements BaseController<User> {
     @DeleteMapping("/user/{id:\\d+}")
     public ResultInfo<User> delete(@PathVariable("id") Long id) {
         return ResultInfo.createResult(userService.delete(id));
+    }
+
+    @PutMapping("/user/password")
+    public ResultInfo<Object> updatePassword(@RequestBody PasswordModifyDTO passwordModifyDTO) throws UnsupportedEncodingException {
+        Long userId = getCurrentUserId();
+        userService.updatePassword(userId, passwordModifyDTO.getNewPassword(), passwordModifyDTO.getOldPassword());
+        return ResultInfo.createEmptyResult();
+    }
+
+    private Long getCurrentUserId() {
+        // TODO yucheng
+        return null;
     }
 }

@@ -2,6 +2,8 @@ package com.echo.crm.service;
 
 import com.echo.crm.entry.User;
 import com.echo.crm.mapper.UserMapper;
+import com.echo.crm.properties.PasswordProperties;
+import com.echo.crm.utils.PasswordUtils;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import org.apache.commons.lang3.StringUtils;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -22,6 +25,9 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private PasswordProperties passwordProperties;
 
     @Override
     public User findById(Long id) {
@@ -49,6 +55,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public User update(User user) {
+        // 该接口不支持密码更新
+        Assert.isNull(user.getPassword(), String.format("用户[%s]密码更新失败", user.getId()));
+
         Long id = user.getId();
         String account = user.getAccount();
 
@@ -70,5 +79,21 @@ public class UserServiceImpl implements UserService {
         userMapper.updateByPrimaryKeySelective(u);
 
         return userMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public void updatePassword(Long userId, String newPassword, String oldPassword) throws UnsupportedEncodingException {
+        User u = findById(userId);
+        Assert.notNull(u, String.format("用户[%s]不存在", userId));
+
+        String password = PasswordUtils.encoding(passwordProperties, oldPassword, u.getTenantId());
+        Assert.isTrue(StringUtils.equals(u.getPassword(), password), "密码不一致");
+        u.setPassword(newPassword);
+        userMapper.updateByPrimaryKeySelective(u);
+    }
+
+    private Long getCurrentUser() {
+        // TODO
+        return null;
     }
 }
