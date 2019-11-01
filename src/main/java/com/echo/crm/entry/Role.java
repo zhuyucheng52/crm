@@ -17,4 +17,5 @@ import javax.persistence.Table;
 public class Role extends BaseEntry {
     private String name;
     private String remark;
+    private Long roleUserId;
 }

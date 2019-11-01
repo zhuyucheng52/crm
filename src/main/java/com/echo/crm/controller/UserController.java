@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.io.UnsupportedEncodingException;
 
 
 /**
@@ -68,7 +67,7 @@ public class UserController implements BaseController<User> {
     }
 
     @PutMapping("/user/password")
-    public ResultInfo<Object> updatePassword(@RequestBody PasswordModifyDTO passwordModifyDTO) throws UnsupportedEncodingException {
+    public ResultInfo<Object> updatePassword(@RequestBody PasswordModifyDTO passwordModifyDTO) {
         Long userId = getCurrentUserId();
         userService.updatePassword(userId, passwordModifyDTO.getNewPassword(), passwordModifyDTO.getOldPassword());
         return ResultInfo.createEmptyResult();

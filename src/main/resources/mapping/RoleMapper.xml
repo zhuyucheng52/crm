@@ -10,9 +10,20 @@
         order by id asc
     </select>
     <select id="selectByUserId" resultType="com.echo.crm.entry.Role">
-        select *
+        select r.*
         from tbl_role r
         inner join tbl_user_role ur on r.id = ur.role_id
         where ur.user_id = #{userId}
+    </select>
+    <select id="selectByUserIds" resultType="com.echo.crm.entry.Role">
+        select r.*, ur.user_id as roleUserId
+        from tbl_role r
+        inner join tbl_user_role ur on r.id = ur.role_id
+        <if test="userIds != null and userIds.size() > 0">
+            where ur.user_id in
+            <foreach collection="userIds" item="userId" separator="," open="(" close=")">
+              #{userId}
+            </foreach>
+        </if>
     </select>
 </mapper>

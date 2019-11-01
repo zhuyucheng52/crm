@@ -1,21 +1,27 @@
 package com.echo.crm.service;
 
+import com.echo.crm.dto.UserDTO;
 import com.echo.crm.entry.Role;
 import com.echo.crm.entry.User;
+import com.echo.crm.exception.SystemException;
 import com.echo.crm.mapper.RoleMapper;
 import com.echo.crm.mapper.UserMapper;
 import com.echo.crm.properties.PasswordProperties;
+import com.echo.crm.utils.BeanQuietUtils;
 import com.echo.crm.utils.PasswordUtils;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author yucheng
@@ -23,6 +29,7 @@ import java.util.List;
  * @create 2019-09-17 09:43
  */
 
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
@@ -35,15 +42,48 @@ public class UserServiceImpl implements UserService {
     private PasswordProperties passwordProperties;
 
     @Override
+    @Transactional(readOnly = true)
     public User findById(Long id) {
         Assert.notNull(id, "用户ID不能为空");
-        User u = userMapper.selectById(id);
-        return u;
+        User u = userMapper.selectByPrimaryKey(id);
+        UserDTO dto = null;
+        if (u != null) {
+            dto = new UserDTO();
+            BeanQuietUtils.copyProperties(dto, u);
+            List<Role> roles = roleMapper.selectByUserId(id);
+            dto.setRoles(roles);
+            return dto;
+        } else {
+            return dto;
+        }
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PageList<User> findByKeyword(String key, PageBounds pageBounds) {
-        return userMapper.selectByKeyword(key, pageBounds);
+        PageList<User> users = userMapper.selectByKeyword(key, pageBounds);
+        final PageList<User> userDTOs = new PageList<>(users.getPaginator());
+        final Map<Long, UserDTO> roleIdUserMap = new HashMap<>();
+        users.stream().forEach(u -> {
+            UserDTO dto = new UserDTO();
+            try {
+                BeanQuietUtils.copyProperties(dto, u);
+                dto.setPassword(null);
+                roleIdUserMap.put(u.getId(), dto);
+            } catch (Exception e) {
+                log.warn("Copy properties failure", u);
+                throw new SystemException(e);
+            }
+            userDTOs.add(dto);
+        });
+
+        // 填充角色信息
+        if (MapUtils.isNotEmpty(roleIdUserMap)) {
+            List<Role> roles = roleMapper.selectByUserIds(roleIdUserMap.keySet());
+            roles.stream().forEach(r -> roleIdUserMap.get(r.getUserId()).getRoles().add(r));
+        }
+
+        return userDTOs;
     }
 
     @Override
@@ -55,7 +95,7 @@ public class UserServiceImpl implements UserService {
         Assert.isTrue(sameAccountUsers.isEmpty(), "账户已存在");
 
         userMapper.insertSelective(user);
-        return userMapper.selectById(user.getId());
+        return userMapper.selectByPrimaryKey(user.getId());
     }
 
     @Override
@@ -73,7 +113,7 @@ public class UserServiceImpl implements UserService {
         Assert.isTrue(StringUtils.equals(account, u.getAccount()), "账号不能修改");
 
         userMapper.updateByPrimaryKeySelective(user);
-        return userMapper.selectById(id);
+        return findById(id);
     }
 
     @Override
@@ -84,11 +124,12 @@ public class UserServiceImpl implements UserService {
         u.setDisabled(1);
         userMapper.updateByPrimaryKeySelective(u);
 
-        return userMapper.selectById(id);
+        return findById(id);
     }
 
     @Override
-    public void updatePassword(Long userId, String newPassword, String oldPassword) throws UnsupportedEncodingException {
+    @Transactional(rollbackFor = Exception.class)
+    public void updatePassword(Long userId, String newPassword, String oldPassword) {
         User u = findById(userId);
         Assert.notNull(u, String.format("用户[%s]不存在", userId));
 
