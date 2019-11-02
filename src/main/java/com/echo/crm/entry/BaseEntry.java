@@ -19,6 +19,6 @@ public class BaseEntry implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String remark;
-    private Long userId = 0L;
+    private Long creator = 0L;
     private String tenantId = "0";
 }
