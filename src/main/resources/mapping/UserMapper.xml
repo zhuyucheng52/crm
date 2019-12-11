@@ -4,7 +4,7 @@
     <select id="selectByKeyword" resultType="com.echo.crm.entry.User">
         select *
         from tbl_user u
-        where u.disabled = 0
+        where 1 = 1
         <if test="key != null and key != ''">
             and (u.id = #{key}
                 or u.account like concat('%', #{key}, '%')

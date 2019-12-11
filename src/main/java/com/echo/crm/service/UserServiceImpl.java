@@ -1,5 +1,6 @@
 package com.echo.crm.service;
 
+import com.echo.crm.dto.Token;
 import com.echo.crm.dto.UserDTO;
 import com.echo.crm.entry.Role;
 import com.echo.crm.entry.User;
@@ -19,9 +20,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author yucheng
@@ -51,7 +54,7 @@ public class UserServiceImpl implements UserService {
             dto = new UserDTO();
             BeanQuietUtils.copyProperties(dto, u);
             List<Role> roles = roleMapper.selectByUserId(id);
-            dto.setRoles(roles);
+            dto.setRoles(roles.stream().map(r -> r.getName()).collect(Collectors.toList()));
             return dto;
         } else {
             return dto;
@@ -80,7 +83,7 @@ public class UserServiceImpl implements UserService {
         // 填充角色信息
         if (MapUtils.isNotEmpty(roleIdUserMap)) {
             List<Role> roles = roleMapper.selectByUserIds(roleIdUserMap.keySet());
-            roles.stream().forEach(r -> roleIdUserMap.get(r.getUserId()).getRoles().add(r));
+            roles.stream().forEach(r -> roleIdUserMap.get(r.getUserId()).getRoles().add(r.getName()));
         }
 
         return userDTOs;
@@ -89,7 +92,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public User add(User user) {
-        String account = user.getAccount();
+        String account = user.getUsername();
         Assert.isTrue(StringUtils.isNotBlank(account), "账户不能为空");
         List<User> sameAccountUsers = userMapper.selectByAccount(account);
         Assert.isTrue(sameAccountUsers.isEmpty(), "账户已存在");
@@ -105,12 +108,12 @@ public class UserServiceImpl implements UserService {
         Assert.isNull(user.getPassword(), String.format("用户[%s]密码更新失败", user.getId()));
 
         Long id = user.getId();
-        String account = user.getAccount();
+        String account = user.getUsername();
 
         User u = findById(id);
         Assert.notNull(u, String.format("用户[%s]不存在", id));
 
-        Assert.isTrue(StringUtils.equals(account, u.getAccount()), "账号不能修改");
+        Assert.isTrue(StringUtils.equals(account, u.getUsername()), "账号不能修改");
 
         userMapper.updateByPrimaryKeySelective(user);
         return findById(id);
@@ -121,7 +124,7 @@ public class UserServiceImpl implements UserService {
     public User delete(Long id) {
         User u = findById(id);
         Assert.notNull(u, "客户不存在");
-        u.setDisabled(1);
+        u.setDisabled(true);
         userMapper.updateByPrimaryKeySelective(u);
 
         return findById(id);
@@ -137,6 +140,24 @@ public class UserServiceImpl implements UserService {
         Assert.isTrue(StringUtils.equals(u.getPassword(), password), "密码不一致");
         u.setPassword(newPassword);
         userMapper.updateByPrimaryKeySelective(u);
+    }
+
+    @Override
+    public Token login(User user) {
+        Token token = new Token();
+        token.setToken("admin-token");
+        return token;
+    }
+
+    @Override
+    public UserDTO findByToken(String token) {
+        UserDTO userDTO = new UserDTO();
+        List<String> roles = new ArrayList<>();
+        roles.add("admin");
+        userDTO.setRoles(roles);
+        userDTO.setUsername("admin username");
+        userDTO.setAvatar("https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
+        return userDTO;
     }
 
     private Long getCurrentUser() {

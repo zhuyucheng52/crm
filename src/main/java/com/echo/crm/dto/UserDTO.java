@@ -17,5 +17,6 @@ import java.util.List;
 @Data
 public class UserDTO extends User {
     @Transient
-    private List<Role> roles = new ArrayList<>();
+    private List<String> roles = new ArrayList<>();
+    private String avatar;
 }
