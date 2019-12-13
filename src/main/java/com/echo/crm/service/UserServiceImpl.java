@@ -1,6 +1,5 @@
 package com.echo.crm.service;
 
-import com.echo.crm.cache.TokenCache;
 import com.echo.crm.dto.TokenHandler;
 import com.echo.crm.dto.UserDTO;
 import com.echo.crm.entry.Role;
@@ -42,9 +41,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RoleMapper roleMapper;
-
-    @Autowired
-    private TokenCache tokenCache;
 
     @Override
     @Transactional(readOnly = true)
@@ -138,10 +134,8 @@ public class UserServiceImpl implements UserService {
         User u = findById(userId);
         Assert.notNull(u, String.format("用户[%s]不存在", userId));
 
-        // TODO yucheng
-        String password = null;
-//        String password = PasswordUtil..encoding(passwordProperties, oldPassword, u.getTenantId());
-        Assert.isTrue(StringUtils.equals(u.getPassword(), password), "密码不一致");
+        String encodedPassword = PasswordUtil.encodedPassword(oldPassword);
+        Assert.isTrue(StringUtils.equals(u.getPassword(), encodedPassword), "密码不一致");
         u.setPassword(newPassword);
         userMapper.updateByPrimaryKeySelective(u);
     }
@@ -149,7 +143,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public TokenHandler login(User user) {
         String username = user.getUsername();
-        String password = PasswordUtil.encodedPassword(user.getPassword(), Consts.SALT);
+        String password = PasswordUtil.encodedPassword(user.getPassword());
 
         User u = findByUsername(username);
         if (u == null) {
@@ -158,7 +152,6 @@ public class UserServiceImpl implements UserService {
         }
         if (StringUtils.equals(u.getPassword(), password)) {
             String token = JWTUtil.sign(username, password);
-            tokenCache.putToken(username, token);
             return new TokenHandler(token);
         } else {
             log.warn("User: {} login failure", username);

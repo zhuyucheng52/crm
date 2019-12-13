@@ -8,5 +8,4 @@ package com.echo.crm.utils;
 
 public class Consts {
     public static int PAGE_SIZE = 20;
-    public static final String SALT = "echo";
 }

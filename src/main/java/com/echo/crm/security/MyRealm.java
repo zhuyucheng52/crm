@@ -1,10 +1,9 @@
 package com.echo.crm.security;
 
-import com.echo.crm.cache.TokenCache;
+import com.echo.crm.entry.User;
 import com.echo.crm.service.UserService;
 import com.echo.crm.utils.JWTUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -25,9 +24,6 @@ public class MyRealm extends AuthorizingRealm {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private TokenCache tokenCache;
 
     /**
      * 大坑！，必须重写此方法，不然Shiro会报错
@@ -63,13 +59,13 @@ public class MyRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken auth) throws AuthenticationException {
         String token = (String) auth.getCredentials();
         String username = JWTUtil.getUsername(token);
-        String cachedToken = tokenCache.getToken(username);
 
-        if (cachedToken == null) {
-            throw new AuthenticationException("Token已过期(Token expired.)！");
+        User u = userService.findByUsername(username);
+        if (u == null) {
+            throw new AuthenticationException("用户不存在");
         }
-        if (!StringUtils.equals(cachedToken, token)) {
-            throw new AuthenticationException("Token错误(Token incorrect.)！");
+        if (!JWTUtil.verify(token, username, u.getPassword())) {
+            throw new AuthenticationException("用户名或密码不正确");
         }
 
         return new SimpleAuthenticationInfo(username, token, "myRealm");

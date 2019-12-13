@@ -1,8 +1,7 @@
 package com.echo.crm.controller;
 
-import com.echo.crm.cache.TokenCache;
-import com.echo.crm.dto.TokenHandler;
 import com.echo.crm.dto.PasswordModifyDTO;
+import com.echo.crm.dto.TokenHandler;
 import com.echo.crm.entry.User;
 import com.echo.crm.service.UserService;
 import com.echo.crm.utils.Page;
@@ -10,6 +9,7 @@ import com.echo.crm.utils.PageUtils;
 import com.echo.crm.utils.ResultInfo;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,9 +35,6 @@ import javax.validation.Valid;
 public class UserController implements BaseController<User> {
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private TokenCache tokenCache;
 
     @Override
     @GetMapping("/user/{id:\\d+}")
@@ -91,7 +88,7 @@ public class UserController implements BaseController<User> {
 
     @PostMapping(value = "/user/logout")
     public ResultInfo<Object> logout(@RequestHeader("X-Token") String token) {
-        tokenCache.invalidateToken(token);
+        SecurityUtils.getSubject().logout();
         return ResultInfo.createEmptyResult();
     }
 
