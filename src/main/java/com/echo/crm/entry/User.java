@@ -29,6 +29,7 @@ public class User extends BaseEntry {
     private String username;
     @NotNull(message = "密码不能为空")
     private String password;
+    private String avatar;
     @NotNull(message = "状态不能为空")
     private Boolean disabled;
 

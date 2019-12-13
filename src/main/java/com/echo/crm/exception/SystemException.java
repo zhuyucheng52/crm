@@ -14,4 +14,8 @@ public class SystemException extends RuntimeException {
     public SystemException(Throwable e) {
         super(e);
     }
+
+    public SystemException(String msg, Throwable e) {
+        super(msg, e);
+    }
 }

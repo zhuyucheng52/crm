@@ -1,8 +1,10 @@
 package com.echo.crm.service;
 
-import com.echo.crm.dto.Token;
+import com.echo.crm.dto.TokenHandler;
 import com.echo.crm.dto.UserDTO;
 import com.echo.crm.entry.User;
+
+import java.util.Set;
 
 /**
  * @author yucheng
@@ -13,7 +15,13 @@ import com.echo.crm.entry.User;
 public interface UserService extends BaseService<User> {
     void updatePassword(Long userId, String newPassword, String oldPassword);
 
-    Token login(User user);
+    TokenHandler login(User user);
 
     UserDTO findByToken(String token);
+
+    User findByUsername(String username);
+
+    Set<String> findRolesByUsername(String username);
+
+    Set<String> findPermissionsByUsername(String username);
 }

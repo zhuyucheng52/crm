@@ -1,15 +1,17 @@
 package com.echo.crm.service;
 
-import com.echo.crm.dto.Token;
+import com.echo.crm.cache.TokenCache;
+import com.echo.crm.dto.TokenHandler;
 import com.echo.crm.dto.UserDTO;
 import com.echo.crm.entry.Role;
 import com.echo.crm.entry.User;
 import com.echo.crm.exception.SystemException;
 import com.echo.crm.mapper.RoleMapper;
 import com.echo.crm.mapper.UserMapper;
-import com.echo.crm.properties.PasswordProperties;
 import com.echo.crm.utils.BeanQuietUtils;
-import com.echo.crm.utils.PasswordUtils;
+import com.echo.crm.utils.Consts;
+import com.echo.crm.utils.JWTUtil;
+import com.echo.crm.utils.PasswordUtil;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import lombok.extern.slf4j.Slf4j;
@@ -20,11 +22,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 /**
  * @author yucheng
@@ -42,7 +44,7 @@ public class UserServiceImpl implements UserService {
     private RoleMapper roleMapper;
 
     @Autowired
-    private PasswordProperties passwordProperties;
+    private TokenCache tokenCache;
 
     @Override
     @Transactional(readOnly = true)
@@ -54,7 +56,7 @@ public class UserServiceImpl implements UserService {
             dto = new UserDTO();
             BeanQuietUtils.copyProperties(dto, u);
             List<Role> roles = roleMapper.selectByUserId(id);
-            dto.setRoles(roles.stream().map(r -> r.getName()).collect(Collectors.toList()));
+            dto.setRoles(new HashSet(roles));
             return dto;
         } else {
             return dto;
@@ -136,28 +138,60 @@ public class UserServiceImpl implements UserService {
         User u = findById(userId);
         Assert.notNull(u, String.format("用户[%s]不存在", userId));
 
-        String password = PasswordUtils.encoding(passwordProperties, oldPassword, u.getTenantId());
+        // TODO yucheng
+        String password = null;
+//        String password = PasswordUtil..encoding(passwordProperties, oldPassword, u.getTenantId());
         Assert.isTrue(StringUtils.equals(u.getPassword(), password), "密码不一致");
         u.setPassword(newPassword);
         userMapper.updateByPrimaryKeySelective(u);
     }
 
     @Override
-    public Token login(User user) {
-        Token token = new Token();
-        token.setToken("admin-token");
-        return token;
+    public TokenHandler login(User user) {
+        String username = user.getUsername();
+        String password = PasswordUtil.encodedPassword(user.getPassword(), Consts.SALT);
+
+        User u = findByUsername(username);
+        if (u == null) {
+            log.warn("User: {} is not exists", username);
+            throw new SystemException("用户不存在");
+        }
+        if (StringUtils.equals(u.getPassword(), password)) {
+            String token = JWTUtil.sign(username, password);
+            tokenCache.putToken(username, token);
+            return new TokenHandler(token);
+        } else {
+            log.warn("User: {} login failure", username);
+            throw new SystemException("用户名或密码不正确");
+        }
     }
 
     @Override
     public UserDTO findByToken(String token) {
+        String username = JWTUtil.getUsername(token);
+        User u = findByUsername(username);
         UserDTO userDTO = new UserDTO();
-        List<String> roles = new ArrayList<>();
-        roles.add("admin");
-        userDTO.setRoles(roles);
-        userDTO.setUsername("admin username");
-        userDTO.setAvatar("https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
+        BeanQuietUtils.copyProperties(userDTO, u);
+
+        userDTO.setRoles(findRolesByUsername(username));
+        userDTO.setPermissions(findPermissionsByUsername(username));
+        userDTO.setPassword(null);
         return userDTO;
+    }
+
+    @Override
+    public User findByUsername(String username) {
+        return userMapper.selectByUsername(username);
+    }
+
+    @Override
+    public Set<String> findRolesByUsername(String username) {
+        return userMapper.selectRolesByUsername(username);
+    }
+
+    @Override
+    public Set<String> findPermissionsByUsername(String username) {
+        return userMapper.selectPermissionsByUsername(username);
     }
 
     private Long getCurrentUser() {

@@ -1,7 +1,8 @@
 package com.echo.crm.controller;
 
+import com.echo.crm.cache.TokenCache;
+import com.echo.crm.dto.TokenHandler;
 import com.echo.crm.dto.PasswordModifyDTO;
-import com.echo.crm.dto.Token;
 import com.echo.crm.entry.User;
 import com.echo.crm.service.UserService;
 import com.echo.crm.utils.Page;
@@ -16,10 +17,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 
@@ -34,6 +35,9 @@ import javax.validation.Valid;
 public class UserController implements BaseController<User> {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private TokenCache tokenCache;
 
     @Override
     @GetMapping("/user/{id:\\d+}")
@@ -81,17 +85,18 @@ public class UserController implements BaseController<User> {
     }
 
     @PostMapping(value = "/user/login")
-    public ResultInfo<Token> login(@RequestBody User user) {
+    public ResultInfo<TokenHandler> login(@RequestBody User user) {
         return ResultInfo.createResult(userService.login(user));
     }
 
     @PostMapping(value = "/user/logout")
-    public ResultInfo<Object> logout() {
+    public ResultInfo<Object> logout(@RequestHeader("X-Token") String token) {
+        tokenCache.invalidateToken(token);
         return ResultInfo.createEmptyResult();
     }
 
     @GetMapping(value = "/user/info")
-    public ResultInfo<User> info(HttpServletRequest request) {
-        return ResultInfo.createResult(userService.findByToken(null));
+    public ResultInfo<User> info(@RequestHeader("X-Token") String token) {
+        return ResultInfo.createResult(userService.findByToken(token));
     }
 }

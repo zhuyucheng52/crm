@@ -1,12 +1,11 @@
 package com.echo.crm.dto;
 
-import com.echo.crm.entry.Role;
 import com.echo.crm.entry.User;
 import lombok.Data;
 
 import javax.persistence.Transient;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author yucheng
@@ -17,6 +16,6 @@ import java.util.List;
 @Data
 public class UserDTO extends User {
     @Transient
-    private List<String> roles = new ArrayList<>();
-    private String avatar;
+    private Set<String> roles = new HashSet<>();
+    private Set<String> permissions = new HashSet<>();
 }

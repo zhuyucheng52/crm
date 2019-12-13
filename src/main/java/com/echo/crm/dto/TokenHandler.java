@@ -9,6 +9,9 @@ import lombok.Data;
  */
 
 @Data
-public class Token {
+public class TokenHandler {
     private String token;
+    public TokenHandler(String token) {
+        this.token = token;
+    }
 }

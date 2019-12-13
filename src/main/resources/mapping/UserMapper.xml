@@ -19,5 +19,25 @@
        from tbl_user u
        where u.account = #{account}
     </select>
+    <select id="selectRolesByUsername" resultType="java.lang.String">
+        select distinct r.value
+        from tbl_user u
+        inner join tbl_user_role ur on u.id = ur.user_id
+        inner join tbl_role r on ur.role_id = r.id
+        where u.username = #{username}
+    </select>
+    <select id="selectPermissionsByUsername" resultType="java.lang.String">
+        select distinct p.value
+        from tbl_user u
+        inner join tbl_user_role ur on u.id = ur.user_id
+        inner join tbl_role_permission rp on ur.role_id = rp.role_id
+        inner join tbl_permission p on rp.permission_id = p.id
+        where u.username = #{username}
+    </select>
+    <select id="selectByUsername" resultType="com.echo.crm.entry.User">
+        select *
+        from tbl_user
+        where username = #{username}
+    </select>
 
 </mapper>

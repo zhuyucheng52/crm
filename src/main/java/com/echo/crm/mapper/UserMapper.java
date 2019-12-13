@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author yucheng
@@ -16,5 +17,11 @@ import java.util.List;
 @Repository
 public interface UserMapper extends BaseMapper<User> {
     List<User> selectByAccount(@Param("account") String account);
+
+    Set<String> selectRolesByUsername(@Param("username") String username);
+
+    Set<String> selectPermissionsByUsername(@Param("username") String username);
+
+    User selectByUsername(@Param("username") String username);
 //    User selectById(@Param("id") Long id);
 }
