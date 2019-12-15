@@ -62,9 +62,10 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
     private void processException(ServletResponse resp, String msg) {
         HttpServletResponse httpServletResponse = (HttpServletResponse) resp;
         try {
+            log.warn("Invalid request with msg: {}", msg);
             httpServletResponse.sendError(200, msg);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.warn("Send error message failure", e);
         }
     }
 }

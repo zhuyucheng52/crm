@@ -51,8 +51,6 @@ public class UserServiceImpl implements UserService {
         if (u != null) {
             dto = new UserDTO();
             BeanQuietUtils.copyProperties(dto, u);
-            List<Role> roles = roleMapper.selectByUserId(id);
-            dto.setRoles(new HashSet(roles));
             return dto;
         } else {
             return dto;

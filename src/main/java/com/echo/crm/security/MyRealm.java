@@ -62,6 +62,7 @@ public class MyRealm extends AuthorizingRealm {
 
         User u = userService.findByUsername(username);
         if (u == null) {
+            log.warn("User: {} is not exists", username);
             throw new AuthenticationException("用户不存在");
         }
         if (!JWTUtil.verify(token, username, u.getPassword())) {
