@@ -18,6 +18,6 @@ import javax.validation.constraints.NotNull;
 public class Product extends BaseEntry {
     @NotNull(message = "名称不能为空")
     private String name;
-    @NotNull(message = "状态不能为空")
+    private Double price;
     private Integer disabled;
 }
