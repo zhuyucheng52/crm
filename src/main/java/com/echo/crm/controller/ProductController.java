@@ -8,6 +8,7 @@ import com.echo.crm.utils.ResultInfo;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,8 +50,10 @@ public class ProductController implements BaseController<Product> {
     }
 
     @Override
-    public ResultInfo<Object> delete(Long id) {
-        return null;
+    @DeleteMapping("/product/{id:\\d+}")
+    public ResultInfo<Object> delete(@PathVariable("id") Long id) {
+        productService.delete(id);
+        return ResultInfo.createEmptyResult();
     }
 
 
