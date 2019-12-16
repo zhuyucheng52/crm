@@ -55,12 +55,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Product delete(Long id) {
+    public void delete(Long id) {
         Product p = findById(id);
         Assert.notNull(p, String.format("产品[%s]不存在", id));
         p.setDisabled(1);
         productMapper.updateByPrimaryKeySelective(p);
-        return productMapper.selectByPrimaryKey(id);
     }
 
     @Override

@@ -49,7 +49,7 @@ public class ProductController implements BaseController<Product> {
     }
 
     @Override
-    public ResultInfo<Product> delete(Long id) {
+    public ResultInfo<Object> delete(Long id) {
         return null;
     }
 

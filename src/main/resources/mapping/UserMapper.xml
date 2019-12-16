@@ -4,20 +4,15 @@
     <select id="selectByKeyword" resultType="com.echo.crm.entry.User">
         select *
         from tbl_user u
-        where 1 = 1
+        where u.disabled = 0
         <if test="key != null and key != ''">
             and (u.id = #{key}
-                or u.account like concat('%', #{key}, '%')
+                or u.username like concat('%', #{key}, '%')
                 or u.name like concat('%', #{key},'%')
                 or u.mobile like concat('%', #{key},'%')
             )
         </if>
         order by id asc
-    </select>
-    <select id="selectByAccount" resultType="com.echo.crm.entry.User">
-       select u.*
-       from tbl_user u
-       where u.account = #{account}
     </select>
     <select id="selectRolesByUsername" resultType="java.lang.String">
         select distinct r.value

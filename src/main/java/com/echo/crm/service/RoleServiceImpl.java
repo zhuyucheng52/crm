@@ -50,7 +50,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Role delete(Long id) {
+    public void delete(Long id) {
         log.warn("删除角色[{}]", id);
         throw new NotSupportException("不支持删除角色");
     }

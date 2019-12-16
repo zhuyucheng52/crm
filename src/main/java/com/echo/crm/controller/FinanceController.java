@@ -58,7 +58,8 @@ public class FinanceController implements BaseController<Finance> {
 
     @Override
     @DeleteMapping("/finance/{id:\\d+}")
-    public ResultInfo<Finance> delete(@PathVariable("id") Long id) {
-        return ResultInfo.createResult(financeService.delete(id));
+    public ResultInfo<Object> delete(@PathVariable("id") Long id) {
+        financeService.delete(id);
+        return ResultInfo.createEmptyResult();
     }
 }

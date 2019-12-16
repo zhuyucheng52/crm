@@ -61,7 +61,8 @@ public class AfterSaleController implements BaseController<AfterSale> {
 
     @Override
     @DeleteMapping("/aftersale/{id:\\d+}")
-    public ResultInfo<AfterSale> delete(@PathVariable("id") Long id) {
-        return ResultInfo.createResult(aftersaleService.delete(id));
+    public ResultInfo<Object> delete(@PathVariable("id") Long id) {
+        aftersaleService.delete(id);
+        return ResultInfo.createEmptyResult();
     }
 }

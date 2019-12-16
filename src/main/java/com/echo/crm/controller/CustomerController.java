@@ -56,7 +56,8 @@ public class CustomerController implements BaseController<Customer> {
 
     @Override
     @DeleteMapping("/customer/{id:\\d+}")
-    public ResultInfo<Customer> delete(@PathVariable("id") Long id) {
-        return ResultInfo.createResult(customerService.delete(id));
+    public ResultInfo<Object> delete(@PathVariable("id") Long id) {
+        customerService.delete(id);
+        return ResultInfo.createEmptyResult();
     }
 }

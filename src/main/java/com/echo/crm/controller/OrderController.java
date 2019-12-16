@@ -59,7 +59,7 @@ public class OrderController implements BaseController<Order> {
     }
 
     @Override
-    public ResultInfo<Order> delete(Long id) {
+    public ResultInfo<Object> delete(Long id) {
         return null;
     }
 

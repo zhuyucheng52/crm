@@ -6,18 +6,18 @@ package com.echo.crm.utils;
  * @create 2019-09-17 18:33
  */
 
-public class TenantIdContextHolder {
+public class UsernameContextHolder {
     private static final ThreadLocal<Long> contextHolder = new ThreadLocal();
 
-    public TenantIdContextHolder() {
+    public UsernameContextHolder() {
     }
 
     public static Long getTenantId() {
         return contextHolder.get();
     }
 
-    public static void setTenantId(Long tenantId) {
-        contextHolder.set(tenantId);
+    public static void setTenantId(Long username) {
+        contextHolder.set(username);
     }
 
     public static void clearTenantId() {

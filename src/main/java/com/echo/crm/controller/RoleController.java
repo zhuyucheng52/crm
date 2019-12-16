@@ -64,7 +64,7 @@ public class RoleController implements BaseController<Role> {
 
     @Override
 //    @DeleteMapping("/role/{id:\\d+}")
-    public ResultInfo<Role> delete(@PathVariable("id") Long id) {
+    public ResultInfo<Object> delete(@PathVariable("id") Long id) {
         log.warn("Delete role {} not supported", id);
         throw new NotSupportException("Method not supported");
     }

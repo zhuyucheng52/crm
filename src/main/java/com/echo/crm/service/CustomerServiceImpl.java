@@ -46,13 +46,12 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Customer delete(Long id) {
+    public void delete(Long id) {
         Customer customer = findById(id);
         Assert.notNull(customer, String.format("客户[%s]不存在", id));
 
         customer.setDisabled(1);
         customerMapper.updateByPrimaryKeySelective(customer);
-        return customerMapper.selectByPrimaryKey(id);
     }
 
     @Override

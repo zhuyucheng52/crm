@@ -8,7 +8,6 @@ import com.echo.crm.exception.SystemException;
 import com.echo.crm.mapper.RoleMapper;
 import com.echo.crm.mapper.UserMapper;
 import com.echo.crm.utils.BeanQuietUtils;
-import com.echo.crm.utils.Consts;
 import com.echo.crm.utils.JWTUtil;
 import com.echo.crm.utils.PasswordUtil;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
@@ -22,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -90,8 +88,12 @@ public class UserServiceImpl implements UserService {
     public User add(User user) {
         String account = user.getUsername();
         Assert.isTrue(StringUtils.isNotBlank(account), "账户不能为空");
-        List<User> sameAccountUsers = userMapper.selectByAccount(account);
-        Assert.isTrue(sameAccountUsers.isEmpty(), "账户已存在");
+        User u = userMapper.selectByUsername(account);
+        Assert.isNull(u, String.format("账户[%s]已存在", account));
+        String password = user.getPassword();
+        if (password != null) {
+            user.setPassword(PasswordUtil.encodedPassword(password));
+        }
 
         userMapper.insertSelective(user);
         return userMapper.selectByPrimaryKey(user.getId());
@@ -102,7 +104,6 @@ public class UserServiceImpl implements UserService {
     public User update(User user) {
         // 该接口不支持密码更新
         Assert.isNull(user.getPassword(), String.format("用户[%s]密码更新失败", user.getId()));
-
         Long id = user.getId();
         String account = user.getUsername();
 
@@ -117,13 +118,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public User delete(Long id) {
+    public void delete(Long id) {
         User u = findById(id);
         Assert.notNull(u, "客户不存在");
         u.setDisabled(true);
         userMapper.updateByPrimaryKeySelective(u);
-
-        return findById(id);
     }
 
     @Override

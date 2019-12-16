@@ -13,6 +13,6 @@ public interface BaseService<T> {
     T findById(Long id);
     T add(T t);
     T update(T t);
-    T delete(Long id);
+    void delete(Long id);
     PageList<T> findByKeyword(String key, PageBounds pageBounds);
 }

@@ -5,7 +5,6 @@ import com.echo.crm.utils.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -16,12 +15,9 @@ import java.util.Set;
 
 @Repository
 public interface UserMapper extends BaseMapper<User> {
-    List<User> selectByAccount(@Param("account") String account);
-
     Set<String> selectRolesByUsername(@Param("username") String username);
 
     Set<String> selectPermissionsByUsername(@Param("username") String username);
 
     User selectByUsername(@Param("username") String username);
-//    User selectById(@Param("id") Long id);
 }

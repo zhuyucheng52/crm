@@ -51,12 +51,11 @@ public class FinanceServiceImpl implements FinanceService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Finance delete(Long id) {
+    public void delete(Long id) {
         Finance f = findById(id);
         Assert.notNull(f, String.format("财务记录[]不存在", id));
         f.setDisabled(1);
         financeMapper.updateByPrimaryKeySelective(f);
-        return financeMapper.selectByPrimaryKey(id);
     }
 
     @Override

@@ -65,8 +65,9 @@ public class UserController implements BaseController<User> {
 
     @Override
     @DeleteMapping("/user/{id:\\d+}")
-    public ResultInfo<User> delete(@PathVariable("id") Long id) {
-        return ResultInfo.createResult(userService.delete(id));
+    public ResultInfo<Object> delete(@PathVariable("id") Long id) {
+        userService.delete(id);
+        return ResultInfo.createEmptyResult();
     }
 
     @PutMapping("/user/password")

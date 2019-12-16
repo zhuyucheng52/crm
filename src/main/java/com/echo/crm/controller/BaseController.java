@@ -14,5 +14,5 @@ public interface BaseController<T> {
     ResultInfo<Page<T>> findByKeyword(Integer page, Integer limit, String key);
     ResultInfo<T> add(T t);
     ResultInfo<T> update(T t);
-    ResultInfo<T> delete(Long id);
+    ResultInfo<Object> delete(Long id);
 }
