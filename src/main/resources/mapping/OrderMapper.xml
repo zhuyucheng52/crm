@@ -1,13 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.echo.crm.mapper.OrderMapper">
-    <select id="selectByKeyword" resultType="com.echo.crm.entry.Order">
-        select *
-        from tbl_order
-        where disabled = 0
+    <resultMap id="selectByKeywordMap" type="com.echo.crm.entry.Order">
+        <id property="id" column="o_id" />
+        <result property="onlineId" column="o_online_id"/>
+        <result property="payment" column="o_payment"/>
+        <result property="status" column="o_status"/>
+        <result property="address" column="o_address"/>
+        <association property="product" javaType="com.echo.crm.entry.Product">
+            <id property="id" column="p_id"/>
+            <result property="name" column="p_name"/>
+        </association>
+    </resultMap>
+    <select id="selectByKeyword" resultMap="selectByKeywordMap">
+        select o.id as o_id,
+          p.id as p_id,
+          p.name as p_name,
+          o.payment as o_payment,
+          o.status as o_status,
+          o.address as o_address
+        from tbl_order o
+        inner join tbl_product p on o.product_id = p.id
+        where o.disabled = 0
         <if test="key != null and key != ''">
-            and id = #{key}
+            and o.id = #{key}
         </if>
-        order by id desc
+        order by o_id desc
     </select>
 </mapper>

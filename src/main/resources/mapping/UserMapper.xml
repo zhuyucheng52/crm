@@ -1,9 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.echo.crm.mapper.UserMapper">
-    <select id="selectByKeyword" resultType="com.echo.crm.entry.User">
-        select *
+    <insert id="insertUseeRoles">
+        insert into tbl_user_role(user_id, role_id) values
+        <foreach collection="roles" item="role" separator=",">
+            (#{userId}, #{role.id})
+        </foreach>
+    </insert>
+    <delete id="deleteUserRoleByUserId">
+        delete from tbl_user_role
+        where user_id = #{userId}
+    </delete>
+    <!--<resultMap id="selectByKeywordMap" type="com.echo.crm.entry.User">-->
+        <!--<id property="id" column="u_id"/>-->
+        <!--<result property="name" column="u_name"/>-->
+        <!--<result property="username" column="u_username"/>-->
+        <!--<result property="birthday" column="u_birthday"/>-->
+        <!--<result property="mobile" column="u_mobile"/>-->
+        <!--<result property="remark" column="u_remark"/>-->
+    <!--</resultMap>-->
+    <select id="selectByKeyword" resultMap="selectByKeywordMap">
+        select
+        u.id as u_id,
+        u.username as u_username,
+        u.name as u_name,
+        u.birthday as u_birthday,
+        u.mobile as u_mobile,
+        u.remark as u_remark,
+        r.id as r_id,
+        r.name as r_name,
+        r.value as r_value
         from tbl_user u
+        inner join tbl_user_role ur on u.id = ur.user_id
+        inner join tbl_role r on r.id = ur.role_id
         where u.disabled = 0
         <if test="key != null and key != ''">
             and (u.id = #{key}
@@ -12,7 +41,7 @@
                 or u.mobile like concat('%', #{key},'%')
             )
         </if>
-        order by id asc
+        order by u_id asc
     </select>
     <select id="selectRolesByUsername" resultType="java.lang.String">
         select distinct r.value
@@ -29,9 +58,35 @@
         inner join tbl_permission p on rp.permission_id = p.id
         where u.username = #{username}
     </select>
-    <select id="selectByUsername" resultType="com.echo.crm.entry.User">
-        select *
-        from tbl_user
+    <resultMap id="selectByKeywordMap" type="com.echo.crm.entry.User">
+        <id property="id" column="u_id"/>
+        <result property="name" column="u_name"/>
+        <result property="username" column="u_username"/>
+        <result property="password" column="u_password"/>
+        <result property="birthday" column="u_birthday"/>
+        <result property="mobile" column="u_mobile"/>
+        <result property="remark" column="u_remark"/>
+        <collection property="roles" javaType="List" ofType="com.echo.crm.entry.Role">
+            <id property="id" column="r_id"/>
+            <result property="name" column="r_name"/>
+            <result property="value" column="r_value"/>
+        </collection>
+    </resultMap>
+    <select id="selectByUsername" resultMap="selectByKeywordMap">
+        select
+          u.id as u_id,
+          u.name as u_name,
+          u.username as u_username,
+          u.password as u_password,
+          u.birthday as u_birtyday,
+          u.mobile as u_mobile,
+          u.remark as u_remark,
+          r.id as r_id,
+          r.name as r_name,
+          r.value as r_value
+        from tbl_user u
+        inner join tbl_user_role ur on u.id = ur.user_id
+        inner join tbl_role r on ur.role_id = r.id
         where username = #{username}
     </select>
 

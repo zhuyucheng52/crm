@@ -34,10 +34,7 @@ public class Order extends BaseEntry {
     public static final int APPROVE_STATUS_PASS = 2;
 
     private String onlineId;
-    @NotNull(message = "ID不能为空")
-    private Long productId;
-    @PositiveOrZero(message = "数量非法")
-    private Integer productNum;
+    private Product product;
     @DecimalMin(value = "0.0", message = "实付金额非法")
     private Double payment;
     private Integer status;

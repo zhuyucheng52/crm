@@ -16,6 +16,7 @@ import javax.persistence.Table;
 @EqualsAndHashCode(callSuper = false)
 public class Role extends BaseEntry {
     private String name;
+    private String value;
     private String remark;
     private Long userId;
 }

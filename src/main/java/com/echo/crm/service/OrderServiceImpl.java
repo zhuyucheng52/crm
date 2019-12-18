@@ -2,8 +2,6 @@ package com.echo.crm.service;
 
 import com.echo.crm.SystemProperties;
 import com.echo.crm.entry.Order;
-import com.echo.crm.entry.Product;
-import com.echo.crm.entry.User;
 import com.echo.crm.mapper.OrderMapper;
 import com.echo.crm.mapper.ProductMapper;
 import com.echo.crm.mapper.UserMapper;
@@ -48,21 +46,21 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Order add(Order order) {
-        Assert.isTrue(order.getProductNum() > 0, "商品数量必须大于0");
-        Assert.isTrue(order.getPayment() >= 0, "订单金额必须大于等于0");
-
-        Product p = productMapper.selectByPrimaryKey(order.getProductId());
-        Assert.notNull(p, "商品不存在");
-
-        if (properties.isOrderNeedApprove()) {
-            Long approveId = order.getApproveId();
-            User u = userMapper.selectByPrimaryKey(approveId);
-            Assert.notNull(u, String.format("审批人[%s]不存在", approveId));
-        }
-
-        if (order.getCustomerId() != null) {
-            // TODO yucheng 校验客户是否存在
-        }
+//        Assert.isTrue(order.getProductNum() > 0, "商品数量必须大于0");
+//        Assert.isTrue(order.getPayment() >= 0, "订单金额必须大于等于0");
+//
+//        Product p = productMapper.selectByPrimaryKey(order.getProductId());
+//        Assert.notNull(p, "商品不存在");
+//
+//        if (properties.isOrderNeedApprove()) {
+//            Long approveId = order.getApproveId();
+//            User u = userMapper.selectByPrimaryKey(approveId);
+//            Assert.notNull(u, String.format("审批人[%s]不存在", approveId));
+//        }
+//
+//        if (order.getCustomerId() != null) {
+//            // TODO yucheng 校验客户是否存在
+//        }
 
         orderMapper.insertSelective(order);
         return findById(order.getId());

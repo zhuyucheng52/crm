@@ -1,7 +1,6 @@
 package com.echo.crm.service;
 
 import com.echo.crm.dto.TokenHandler;
-import com.echo.crm.dto.UserDTO;
 import com.echo.crm.entry.User;
 
 import java.util.Set;
@@ -17,7 +16,7 @@ public interface UserService extends BaseService<User> {
 
     TokenHandler login(User user);
 
-    UserDTO findByToken(String token);
+    User findByToken(String token);
 
     User findByUsername(String username);
 

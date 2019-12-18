@@ -1,8 +1,6 @@
 package com.echo.crm.service;
 
 import com.echo.crm.dto.TokenHandler;
-import com.echo.crm.dto.UserDTO;
-import com.echo.crm.entry.Role;
 import com.echo.crm.entry.User;
 import com.echo.crm.exception.SystemException;
 import com.echo.crm.mapper.RoleMapper;
@@ -13,16 +11,12 @@ import com.echo.crm.utils.PasswordUtil;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -44,43 +38,13 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public User findById(Long id) {
         Assert.notNull(id, "用户ID不能为空");
-        User u = userMapper.selectByPrimaryKey(id);
-        UserDTO dto = null;
-        if (u != null) {
-            dto = new UserDTO();
-            BeanQuietUtils.copyProperties(dto, u);
-            return dto;
-        } else {
-            return dto;
-        }
+        return userMapper.selectByPrimaryKey(id);
     }
 
     @Override
     @Transactional(readOnly = true)
     public PageList<User> findByKeyword(String key, PageBounds pageBounds) {
-        PageList<User> users = userMapper.selectByKeyword(key, pageBounds);
-        final PageList<User> userDTOs = new PageList<>(users.getPaginator());
-        final Map<Long, UserDTO> roleIdUserMap = new HashMap<>();
-        users.stream().forEach(u -> {
-            UserDTO dto = new UserDTO();
-            try {
-                BeanQuietUtils.copyProperties(dto, u);
-                dto.setPassword(null);
-                roleIdUserMap.put(u.getId(), dto);
-            } catch (Exception e) {
-                log.warn("Copy properties failure", u);
-                throw new SystemException(e);
-            }
-            userDTOs.add(dto);
-        });
-
-        // 填充角色信息
-        if (MapUtils.isNotEmpty(roleIdUserMap)) {
-            List<Role> roles = roleMapper.selectByUserIds(roleIdUserMap.keySet());
-            roles.stream().forEach(r -> roleIdUserMap.get(r.getUserId()).getRoles().add(r.getName()));
-        }
-
-        return userDTOs;
+        return userMapper.selectByKeyword(key, pageBounds);
     }
 
     @Override
@@ -111,9 +75,19 @@ public class UserServiceImpl implements UserService {
         Assert.notNull(u, String.format("用户[%s]不存在", id));
 
         Assert.isTrue(StringUtils.equals(account, u.getUsername()), "账号不能修改");
+        updateUserRole(user);
 
         userMapper.updateByPrimaryKeySelective(user);
         return findById(id);
+    }
+
+    /**
+     * 更新用户角色
+     * @param user
+     */
+    private void updateUserRole(User user) {
+        userMapper.deleteUserRoleByUserId(user.getId());
+        userMapper.insertUseeRoles(user.getId(), user.getRoles());
     }
 
     @Override
@@ -157,16 +131,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO findByToken(String token) {
+    public User findByToken(String token) {
         String username = JWTUtil.getUsername(token);
-        User u = findByUsername(username);
-        UserDTO userDTO = new UserDTO();
-        BeanQuietUtils.copyProperties(userDTO, u);
-
-        userDTO.setRoles(findRolesByUsername(username));
-        userDTO.setPermissions(findPermissionsByUsername(username));
-        userDTO.setPassword(null);
-        return userDTO;
+        return findByUsername(username);
     }
 
     @Override
