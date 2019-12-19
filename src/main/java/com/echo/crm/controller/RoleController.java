@@ -41,8 +41,8 @@ public class RoleController implements BaseController<Role> {
 
     @Override
     @GetMapping("/roles")
-    public ResultInfo<Page<Role>> findByKeyword(@RequestParam(value = "page") Integer page,
-                                                     @RequestParam(value = "limit") Integer limit,
+    public ResultInfo<Page<Role>> findByKeyword(@RequestParam(value = "page", required = false) Integer page,
+                                                     @RequestParam(value = "limit", required = false) Integer limit,
                                                      @RequestParam(value = "q", required = false) String key) {
         PageList<Role> roles = roleService.findByKeyword(key, PageUtils.createPageBounds(page, limit));
         return ResultInfo.createResult(PageUtils.createPage(roles));
