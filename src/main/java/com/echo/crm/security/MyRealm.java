@@ -3,6 +3,7 @@ package com.echo.crm.security;
 import com.echo.crm.entry.User;
 import com.echo.crm.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -70,7 +71,8 @@ public class MyRealm extends AuthorizingRealm {
             log.warn("User: {} is not exists", username);
             throw new AuthenticationException("用户不存在");
         }
-        int result = JWTUtil.verify(token, username, JWTProperties.SIGN_KEY);
+        String secret = StringUtils.right(username, 5) + JWTProperties.SIGN_KEY;
+        int result = JWTUtil.verify(token, username, secret);
         if (result == JWTUtil.SUCCESS) {
             // 验证TOKEN成功
             ThreadContext.put("token", token);

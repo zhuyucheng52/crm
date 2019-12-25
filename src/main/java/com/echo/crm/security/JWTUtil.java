@@ -7,6 +7,7 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.echo.crm.utils.PasswordUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
@@ -79,7 +80,8 @@ public class JWTUtil {
         long expired = getExpired(token) * 1000;
         if (System.currentTimeMillis() + (JWTProperties.TOKEN_EXPIRE_TIME / 2) > expired) {
             String username = getUsername(token);
-            return sign(username, JWTProperties.SIGN_KEY, JWTProperties.TOKEN_EXPIRE_TIME);
+            String secret = StringUtils.right(username, 5) + JWTProperties.SIGN_KEY;
+            return sign(username, secret, JWTProperties.TOKEN_EXPIRE_TIME);
         }
         return token;
     }

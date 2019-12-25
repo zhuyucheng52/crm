@@ -127,7 +127,8 @@ public class UserServiceImpl implements UserService {
             throw new SystemException("用户不存在");
         }
         if (StringUtils.equals(u.getPassword(), password)) {
-            String token = JWTUtil.sign(username, JWTProperties.SIGN_KEY, JWTProperties.TOKEN_EXPIRE_TIME);
+            String secret = StringUtils.right(username, 5) + JWTProperties.SIGN_KEY;
+            String token = JWTUtil.sign(username, secret, JWTProperties.TOKEN_EXPIRE_TIME);
             ThreadContext.put("token", token);
             return new TokenHandler(token);
         } else {
