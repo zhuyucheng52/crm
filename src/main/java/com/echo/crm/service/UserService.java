@@ -1,5 +1,6 @@
 package com.echo.crm.service;
 
+import com.echo.crm.dto.LoginDTO;
 import com.echo.crm.dto.TokenHandler;
 import com.echo.crm.entry.User;
 
@@ -14,7 +15,7 @@ import java.util.Set;
 public interface UserService extends BaseService<User> {
     void updatePassword(Long userId, String newPassword, String oldPassword);
 
-    TokenHandler login(User user);
+    TokenHandler login(LoginDTO loginDTO);
 
     User findByToken(String token);
 

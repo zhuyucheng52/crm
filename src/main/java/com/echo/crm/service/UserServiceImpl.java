@@ -1,5 +1,6 @@
 package com.echo.crm.service;
 
+import com.echo.crm.dto.LoginDTO;
 import com.echo.crm.dto.TokenHandler;
 import com.echo.crm.entry.User;
 import com.echo.crm.exception.SystemException;
@@ -79,9 +80,6 @@ public class UserServiceImpl implements UserService {
         User u = findById(id);
         Assert.notNull(u, String.format("用户[%s]不存在", id));
 
-        Assert.isTrue(StringUtils.equals(account, u.getUsername()), "账号不能修改");
-        updateUserRole(user);
-
         userMapper.updateByPrimaryKeySelective(user);
         return findById(id);
     }
@@ -117,9 +115,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public TokenHandler login(User user) {
-        String username = user.getUsername();
-        String password = PasswordUtil.encodedPassword(user.getPassword());
+    public TokenHandler login(LoginDTO loginDTO) {
+        String username = loginDTO.getUsername();
+        String password = PasswordUtil.encodedPassword(loginDTO.getPassword());
 
         User u = findByUsername(username);
         if (u == null) {

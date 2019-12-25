@@ -1,5 +1,6 @@
 package com.echo.crm.controller;
 
+import com.echo.crm.dto.LoginDTO;
 import com.echo.crm.dto.PasswordModifyDTO;
 import com.echo.crm.dto.TokenHandler;
 import com.echo.crm.entry.User;
@@ -83,9 +84,19 @@ public class UserController implements BaseController<User> {
     }
 
 
-
     @GetMapping(value = "/user/info")
-    public ResultInfo<User> info(@RequestHeader("X-Token") String token) {
+    public ResultInfo<User> info(@RequestHeader("TOKEN") String token) {
         return ResultInfo.createResult(userService.findByToken(token));
+    }
+
+    @PostMapping(value = "/user/login")
+    public ResultInfo<TokenHandler> login(@RequestBody LoginDTO loginDTO) {
+        return ResultInfo.createResult(userService.login(loginDTO));
+    }
+
+    @PostMapping(value = "/user/logout")
+    public ResultInfo<Object> logout() {
+        SecurityUtils.getSubject().logout();
+        return ResultInfo.createEmptyResult();
     }
 }

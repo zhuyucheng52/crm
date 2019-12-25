@@ -3,6 +3,9 @@ package com.echo.crm.entry;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -17,21 +20,23 @@ import java.util.List;
 @Data
 @Table(name = "tbl_user")
 @EqualsAndHashCode(callSuper = false)
-public class User extends BaseEntry {
-    @NotNull(message = "用户名不能为空")
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
     private String sex;
     private Date birthday;
-    @NotNull(message = "手机号不能为空")
     private String mobile;
     private String address;
     private String email;
-    @NotNull(message = "用户名不能为空")
     private String username;
-    @NotNull(message = "密码不能为空")
     private String password;
     private String avatar;
-    @NotNull(message = "状态不能为空")
     private Boolean disabled;
     private List<Role> roles;
+
+    private String remark;
+    private Long creator = 0L;
+    private String tenantId = "0";
 }
