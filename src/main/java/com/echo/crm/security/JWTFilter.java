@@ -1,18 +1,22 @@
 package com.echo.crm.security;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.ExpiredCredentialsException;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
+import org.springframework.http.HttpStatus;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 @Slf4j
 public class JWTFilter extends BasicHttpAuthenticationFilter {
-    public static final String TOKEN_NAME = "X-Token";
-
+    private Set<String> anonymousUrls = new HashSet<>();
 
     /**
      * 判断用户是否想要登入。
@@ -20,9 +24,7 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
      */
     @Override
     protected boolean isLoginAttempt(ServletRequest request, ServletResponse response) {
-        HttpServletRequest req = (HttpServletRequest) request;
-        String authorization = req.getHeader(TOKEN_NAME);
-        return authorization != null;
+        return true;
     }
 
     /**
@@ -31,12 +33,14 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
     @Override
     protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        String authorization = httpServletRequest.getHeader(TOKEN_NAME);
+        String authorization = httpServletRequest.getHeader(JWTProperties.TOKEN_NAME);
 
         JWTToken token = new JWTToken(authorization);
         // 提交给realm进行登入，如果错误他会抛出异常并被捕获
         getSubject(request, response).login(token);
         // 如果没有抛出异常则代表登入成功，返回true
+
+        ((HttpServletResponse) response).addHeader(JWTProperties.TOKEN_NAME, JWTUtil.newTokenIfNecessary(authorization));
         return true;
     }
 
@@ -45,27 +49,45 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
      */
     @Override
     protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception {
-        if (isLoginAttempt(request, response)) {
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        if (!isAnonymousUrls(httpServletRequest.getRequestURI())) {
             try {
-                executeLogin(request, response);
-            } catch (Exception e) {
+                 executeLogin(request, response);
+                 return true;
+            } catch (ExpiredCredentialsException e) {
+                log.warn("Host: {} token expired", request.getRemoteHost());
+                processException(response, HttpStatus.GONE, e.getMessage());
+            } catch (AuthenticationException e) {
                 log.warn("Host: {} login failure", request.getRemoteHost());
-                processException(response, e.getMessage());
+                processException(response, HttpStatus.UNAUTHORIZED, e.getMessage());
             }
+            return false;
         }
         return true;
+    }
+
+    private boolean isAnonymousUrls(String contextPath) {
+        return anonymousUrls.contains(contextPath);
     }
 
     /**
      * 将非法请求跳转到 /401
      */
-    private void processException(ServletResponse resp, String msg) {
+    private void processException(ServletResponse resp, HttpStatus status, String msg) {
         HttpServletResponse httpServletResponse = (HttpServletResponse) resp;
         try {
             log.warn("Invalid request with msg: {}", msg);
-            httpServletResponse.sendError(200, msg);
+            httpServletResponse.sendError(status.value(), msg);
         } catch (IOException e) {
             log.warn("Send error message failure", e);
         }
+    }
+
+    public Set<String> getAnonymousUrls() {
+        return anonymousUrls;
+    }
+
+    public void setAnonymousUrls(Set<String> anonymousUrls) {
+        this.anonymousUrls = anonymousUrls;
     }
 }

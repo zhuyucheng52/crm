@@ -45,6 +45,11 @@ public class ResultInfo<T> {
      */
     private String errorMsg;
 
+    /**
+     * 额外信息(如:token)
+     */
+    private String extra;
+
     public ResultInfo(T data) {
         this.success = Result.RESULT_SUCCESS.getValue();
         this.data = data;

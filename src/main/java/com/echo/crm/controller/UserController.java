@@ -82,16 +82,7 @@ public class UserController implements BaseController<User> {
         return null;
     }
 
-    @PostMapping(value = "/user/login")
-    public ResultInfo<TokenHandler> login(@RequestBody User user) {
-        return ResultInfo.createResult(userService.login(user));
-    }
 
-    @PostMapping(value = "/user/logout")
-    public ResultInfo<Object> logout(@RequestHeader("X-Token") String token) {
-        SecurityUtils.getSubject().logout();
-        return ResultInfo.createEmptyResult();
-    }
 
     @GetMapping(value = "/user/info")
     public ResultInfo<User> info(@RequestHeader("X-Token") String token) {

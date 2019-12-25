@@ -1,6 +1,7 @@
 package com.echo.crm.config;
 
 import com.echo.crm.security.JWTFilter;
+import com.echo.crm.security.JWTProperties;
 import com.echo.crm.security.MyRealm;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
@@ -40,12 +41,14 @@ public class ShiroConfig {
     }
 
     @Bean("shiroFilter")
-    public ShiroFilterFactoryBean factory(DefaultWebSecurityManager securityManager) {
+    public ShiroFilterFactoryBean factory(DefaultWebSecurityManager securityManager, JWTProperties properties) {
         ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
 
         // 添加自己的过滤器并且取名为jwt
         Map<String, Filter> filterMap = new HashMap<>();
-        filterMap.put("jwt", new JWTFilter());
+        JWTFilter jwtFilter = new JWTFilter();
+        jwtFilter.setAnonymousUrls(properties.getAnonymousUrls());
+        filterMap.put("jwt", jwtFilter);
         factoryBean.setFilters(filterMap);
 
         factoryBean.setSecurityManager(securityManager);

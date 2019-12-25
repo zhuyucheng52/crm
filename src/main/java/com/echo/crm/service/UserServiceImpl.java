@@ -5,13 +5,14 @@ import com.echo.crm.entry.User;
 import com.echo.crm.exception.SystemException;
 import com.echo.crm.mapper.RoleMapper;
 import com.echo.crm.mapper.UserMapper;
-import com.echo.crm.utils.BeanQuietUtils;
-import com.echo.crm.utils.JWTUtil;
+import com.echo.crm.security.JWTProperties;
+import com.echo.crm.security.JWTUtil;
 import com.echo.crm.utils.PasswordUtil;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.util.ThreadContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,10 @@ import java.util.Set;
 @Slf4j
 @Service
 public class UserServiceImpl implements UserService {
+
+    @Autowired
+    private JWTProperties jwtProperties;
+
     @Autowired
     private UserMapper userMapper;
 
@@ -122,7 +127,8 @@ public class UserServiceImpl implements UserService {
             throw new SystemException("用户不存在");
         }
         if (StringUtils.equals(u.getPassword(), password)) {
-            String token = JWTUtil.sign(username, password);
+            String token = JWTUtil.sign(username, JWTProperties.SIGN_KEY, JWTProperties.TOKEN_EXPIRE_TIME);
+            ThreadContext.put("token", token);
             return new TokenHandler(token);
         } else {
             log.warn("User: {} login failure", username);
