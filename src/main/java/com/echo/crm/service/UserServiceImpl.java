@@ -2,6 +2,7 @@ package com.echo.crm.service;
 
 import com.echo.crm.dto.LoginDTO;
 import com.echo.crm.dto.TokenHandler;
+import com.echo.crm.entry.Role;
 import com.echo.crm.entry.User;
 import com.echo.crm.exception.SystemException;
 import com.echo.crm.mapper.RoleMapper;
@@ -19,6 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -50,7 +54,15 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public PageList<User> findByKeyword(String key, PageBounds pageBounds) {
-        return userMapper.selectByKeyword(key, pageBounds);
+        PageList<User> users = userMapper.selectByKeyword(key, pageBounds);
+        final Map<Long, User> idUserMap = new HashMap<>();
+        users.forEach(u -> idUserMap.put(u.getId(), u));
+
+        // 填充角色信息
+        List<Role> roles = roleMapper.selectByUserIds(idUserMap.keySet());
+        roles.forEach(r -> idUserMap.get(r.getUserId()).getRoles().add(r));
+
+        return users;
     }
 
     @Override

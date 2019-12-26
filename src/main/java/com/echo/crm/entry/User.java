@@ -7,7 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -34,7 +34,7 @@ public class User {
     private String password;
     private String avatar;
     private Boolean disabled;
-    private List<Role> roles;
+    private List<Role> roles = new ArrayList<>();
 
     private String remark;
     private Long creator = 0L;
