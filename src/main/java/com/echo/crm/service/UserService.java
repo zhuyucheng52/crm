@@ -3,6 +3,8 @@ package com.echo.crm.service;
 import com.echo.crm.dto.LoginDTO;
 import com.echo.crm.dto.TokenHandler;
 import com.echo.crm.entry.User;
+import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
+import com.github.miemiedev.mybatis.paginator.domain.PageList;
 
 import java.util.Set;
 
@@ -12,16 +14,26 @@ import java.util.Set;
  * @create 2019-09-17 09:42
  */
 
-public interface UserService extends BaseService<User> {
-    void updatePassword(Long userId, String newPassword, String oldPassword);
+public interface UserService {
+	User findById(Long id);
 
-    TokenHandler login(LoginDTO loginDTO);
+	void add(User t);
 
-    User findByToken(String token);
+	void update(User t);
 
-    User findByUsername(String username);
+	void delete(Long id);
 
-    Set<String> findRolesByUsername(String username);
+	PageList<User> findByKeyword(String key, PageBounds pageBounds);
 
-    Set<String> findPermissionsByUsername(String username);
+	void updatePassword(Long userId, String newPassword, String oldPassword);
+
+	TokenHandler login(LoginDTO loginDTO);
+
+	User findByToken(String token);
+
+	User findByUsername(String username);
+
+	Set<String> findRolesByUsername(String username);
+
+	Set<String> findPermissionsByUsername(String username);
 }

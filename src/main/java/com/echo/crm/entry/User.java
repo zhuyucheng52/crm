@@ -19,7 +19,6 @@ import java.util.List;
 
 @Data
 @Table(name = "tbl_user")
-@EqualsAndHashCode(callSuper = false)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +33,8 @@ public class User {
     private String password;
     private String avatar;
     private Boolean disabled;
-    private List<Role> roles = new ArrayList<>();
+    private Boolean deleted;
+    private List<Role> roles;
 
     private String remark;
     private Long creator = 0L;

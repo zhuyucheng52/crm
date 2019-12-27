@@ -29,17 +29,15 @@ import javax.validation.Valid;
 
 @Slf4j
 @RestController
-public class RoleController implements BaseController<Role> {
+public class RoleController {
     @Autowired
     private RoleService roleService;
 
-    @Override
     @GetMapping("/role/{id:\\d+}")
     public ResultInfo<Role> findById(@PathVariable("id") Long id) {
         return ResultInfo.createResult(roleService.findById(id));
     }
 
-    @Override
     @GetMapping("/roles")
     public ResultInfo<Page<Role>> findByKeyword(@RequestParam(value = "page", required = false) Integer page,
                                                      @RequestParam(value = "limit", required = false) Integer limit,
@@ -48,24 +46,21 @@ public class RoleController implements BaseController<Role> {
         return ResultInfo.createResult(PageUtils.createPage(roles));
     }
 
-    @Override
-//    @PostMapping("/role")
-    public ResultInfo<Role> add(@Valid @RequestBody Role role) {
-        log.warn("Add role {} not supported", role);
-        throw new NotSupportException("Method not supported");
+    @PostMapping("/role")
+    public ResultInfo<Object> add(@Valid @RequestBody Role role) {
+    	roleService.add(role);
+    	return ResultInfo.createEmptyResult();
     }
 
-    @Override
-//    @PutMapping("/role")
-    public ResultInfo<Role> update(@RequestBody Role role) {
-        log.warn("Update role {} not supported", role);
-        throw new NotSupportException("Method not supported");
+    @PutMapping("/role")
+    public ResultInfo<Object> update(@RequestBody Role role) {
+        roleService.update(role);
+        return ResultInfo.createEmptyResult();
     }
 
-    @Override
-//    @DeleteMapping("/role/{id:\\d+}")
+    @DeleteMapping("/role/{id:\\d+}")
     public ResultInfo<Object> delete(@PathVariable("id") Long id) {
-        log.warn("Delete role {} not supported", id);
-        throw new NotSupportException("Method not supported");
+        roleService.delete(id);
+        return ResultInfo.createEmptyResult();
     }
 }

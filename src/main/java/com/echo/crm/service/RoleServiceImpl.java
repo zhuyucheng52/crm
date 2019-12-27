@@ -36,22 +36,19 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Role add(Role role) {
-        log.warn("添加角色{}", role);
-        throw new NotSupportException("不支持添加角色");
+    public void add(Role role) {
+    	roleMapper.insert(role);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Role update(Role role) {
-        log.warn("更新角色[{}]", role.getId());
-        throw new NotSupportException("不支持更新角色");
+    public int update(Role role) {
+    	return roleMapper.updateByPrimaryKeySelective(role);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(Long id) {
-        log.warn("删除角色[{}]", id);
-        throw new NotSupportException("不支持删除角色");
+        roleMapper.deleteByPrimaryKey(id);
     }
 }

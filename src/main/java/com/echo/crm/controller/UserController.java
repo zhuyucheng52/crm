@@ -33,17 +33,15 @@ import javax.validation.Valid;
 
 @Slf4j
 @RestController
-public class UserController implements BaseController<User> {
+public class UserController {
     @Autowired
     private UserService userService;
 
-    @Override
     @GetMapping("/user/{id:\\d+}")
     public ResultInfo<User> findById(@PathVariable("id") Long id) {
         return ResultInfo.createResult(userService.findById(id));
     }
 
-    @Override
     @GetMapping("/users")
     public ResultInfo<Page<User>> findByKeyword(@RequestParam(value = "page", required = false) Integer page,
                                                 @RequestParam(value = "limit", required = false) Integer limit,
@@ -52,19 +50,18 @@ public class UserController implements BaseController<User> {
         return ResultInfo.createResult(PageUtils.createPage(users));
     }
 
-    @Override
     @PostMapping("/user")
-    public ResultInfo<User> add(@Valid @RequestBody User user) {
-        return ResultInfo.createResult(userService.add(user));
+    public ResultInfo<Object> add(@Valid @RequestBody User user) {
+        userService.add(user);
+        return ResultInfo.createEmptyResult();
     }
 
-    @Override
     @PutMapping("/user")
-    public ResultInfo<User> update(@RequestBody User user) {
-        return ResultInfo.createResult(userService.update(user));
+    public ResultInfo<Object> update(@RequestBody User user) {
+    	userService.update(user);
+        return ResultInfo.createEmptyResult();
     }
 
-    @Override
     @DeleteMapping("/user/{id:\\d+}")
     public ResultInfo<Object> delete(@PathVariable("id") Long id) {
         userService.delete(id);

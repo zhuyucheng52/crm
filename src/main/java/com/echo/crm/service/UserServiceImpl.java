@@ -13,6 +13,7 @@ import com.echo.crm.utils.PasswordUtil;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.util.ThreadContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author yucheng
@@ -36,9 +39,6 @@ import java.util.Set;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    private JWTProperties jwtProperties;
-
-    @Autowired
     private UserMapper userMapper;
 
     @Autowired
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public User findById(Long id) {
         Assert.notNull(id, "用户ID不能为空");
-        return userMapper.selectByPrimaryKey(id);
+        return userMapper.selectById(id);
     }
 
     @Override
@@ -56,7 +56,10 @@ public class UserServiceImpl implements UserService {
     public PageList<User> findByKeyword(String key, PageBounds pageBounds) {
         PageList<User> users = userMapper.selectByKeyword(key, pageBounds);
         final Map<Long, User> idUserMap = new HashMap<>();
-        users.forEach(u -> idUserMap.put(u.getId(), u));
+        users.forEach(u -> {
+            u.setRoles(new ArrayList<>());
+            idUserMap.put(u.getId(), u);
+        });
 
         // 填充角色信息
         List<Role> roles = roleMapper.selectByUserIds(idUserMap.keySet());
@@ -67,7 +70,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public User add(User user) {
+    public void add(User user) {
         String account = user.getUsername();
         Assert.isTrue(StringUtils.isNotBlank(account), "账户不能为空");
         User u = userMapper.selectByUsername(account);
@@ -76,24 +79,20 @@ public class UserServiceImpl implements UserService {
         if (password != null) {
             user.setPassword(PasswordUtil.encodedPassword(password));
         }
-
         userMapper.insertSelective(user);
-        return userMapper.selectByPrimaryKey(user.getId());
+        List<Long> roleIds = user.getRoles().stream().map(r -> r.getId()).collect(Collectors.toList());
+        userMapper.insertUserRoles(user.getId(), roleIds);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public User update(User user) {
-        // 该接口不支持密码更新
-        Assert.isNull(user.getPassword(), String.format("用户[%s]密码更新失败", user.getId()));
-        Long id = user.getId();
-        String account = user.getUsername();
-
-        User u = findById(id);
-        Assert.notNull(u, String.format("用户[%s]不存在", id));
-
+    public void update(User user) {
+        Assert.notNull(user.getId(), "用户ID不能为null");
+        // 不支持用户名和密码更新
+    	user.setUsername(null);
+		user.setPassword(null);
+        updateUserRole(user);
         userMapper.updateByPrimaryKeySelective(user);
-        return findById(id);
     }
 
     /**
@@ -101,16 +100,20 @@ public class UserServiceImpl implements UserService {
      * @param user
      */
     private void updateUserRole(User user) {
-        userMapper.deleteUserRoleByUserId(user.getId());
-        userMapper.insertUseeRoles(user.getId(), user.getRoles());
+        List<Role> roles = user.getRoles();
+        if (CollectionUtils.isNotEmpty(roles)) {
+            userMapper.deleteUserRoleByUserId(user.getId());
+            List<Long> roleIds = roles.stream().map(r -> r.getId()).collect(Collectors.toList());
+            userMapper.insertUserRoles(user.getId(), roleIds);
+        }
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(Long id) {
-        User u = findById(id);
-        Assert.notNull(u, "客户不存在");
-        u.setDisabled(true);
+    	User u = new User();
+    	u.setId(id);
+    	u.setDeleted(true);
         userMapper.updateByPrimaryKeySelective(u);
     }
 

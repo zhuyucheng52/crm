@@ -1,9 +1,12 @@
 package com.echo.crm.entry;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * @author yucheng
@@ -13,10 +16,12 @@ import javax.persistence.Table;
 
 @Data
 @Table(name = "tbl_role")
-@EqualsAndHashCode(callSuper = false)
-public class Role extends BaseEntry {
+public class Role {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
-    private String value;
     private String remark;
+    @Transient
     private Long userId;
 }
