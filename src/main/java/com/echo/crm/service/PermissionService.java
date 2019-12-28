@@ -4,6 +4,8 @@ import com.echo.crm.entry.Permission;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 
+import java.util.List;
+
 /**
  * @author yucheng
  * @description
@@ -16,4 +18,5 @@ public interface PermissionService {
 	void update(Permission t);
 	int delete(Long id);
 	PageList<Permission> findByKeyword(String key, PageBounds pageBounds);
+	List<Permission> findPermissionTree();
 }

@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * @author yucheng
  * @description
@@ -47,5 +50,27 @@ public class PermissionServiceImpl implements PermissionService {
 	@Override
 	public PageList<Permission> findByKeyword(String key, PageBounds pageBounds) {
 		return permissionMapper.selectByKeyword(key, pageBounds);
+	}
+
+	@Override
+	public List<Permission> findPermissionTree() {
+		List<Permission> permissions = permissionMapper.selectAll();
+		List<Permission> permissionTree = getRoots(permissions);
+		buildPermissionTree(permissionTree, permissions);
+		return permissionTree;
+	}
+
+	private void buildPermissionTree(List<Permission> roots, List<Permission> permissions) {
+		for (Permission p : permissions) {
+			for (Permission root : roots) {
+				if (p.getParentId().equals(root.getId())) {
+					root.getChildren().add(p);
+				}
+			}
+		}
+	}
+
+	private List<Permission> getRoots(List<Permission> permissions) {
+		return permissions.stream().filter(p -> p.getParentId() == 0).collect(Collectors.toList());
 	}
 }

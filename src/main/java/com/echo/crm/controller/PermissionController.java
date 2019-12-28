@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * @author yucheng
  * @description
@@ -36,6 +38,10 @@ public class PermissionController {
 		return ResultInfo.createResult(PageUtils.createPage(permissions));
 	}
 
+	@GetMapping("/permission/tree")
+	public ResultInfo<List<Permission>> findPermissionTree() {
+		return ResultInfo.createResult(permissionService.findPermissionTree());
+	}
 	@PutMapping("/permission")
 	public ResultInfo<Object> update(@RequestBody Permission permission) {
 		permissionService.update(permission);
