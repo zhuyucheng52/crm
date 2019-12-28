@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author yucheng
@@ -22,6 +24,7 @@ public class Role {
     private Long id;
     private String name;
     private String remark;
+    private List<Permission> permissions = new ArrayList<>();
     @Transient
     private Long userId;
 }

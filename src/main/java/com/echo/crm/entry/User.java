@@ -34,7 +34,7 @@ public class User {
     private String avatar;
     private Boolean disabled;
     private Boolean deleted;
-    private List<Role> roles;
+    private List<Role> roles = new ArrayList<>();
 
     private String remark;
     private Long creator = 0L;

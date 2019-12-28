@@ -23,4 +23,24 @@
 			)
 		</if>
 	</select>
+	<resultMap id="permissionWithRoleId" type="com.echo.crm.entry.Permission">
+		<id property="id" column="r_id"/>
+		<result property="name" column="p_name"/>
+		<result property="value" column="p_value"/>
+		<result property="roleId" column="r_id"/>
+	</resultMap>
+	<select id="selectByRoleIds" resultMap="permissionWithRoleId">
+		select
+			rp.role_id as r_id,
+			p.id as p_id,
+			p.name as p_name,
+			p.value as p_value,
+			p.remark as p_remark
+		from tbl_role_permission rp
+		inner join tbl_permission p on rp.permission_id = p.id
+		where rp.role_id in
+		<foreach collection="roleIds" item="roleId" open="(" close=")" separator=",">
+			#{roleId}
+		</foreach>
+	</select>
 </mapper>

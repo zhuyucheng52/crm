@@ -56,10 +56,7 @@ public class UserServiceImpl implements UserService {
     public PageList<User> findByKeyword(String key, PageBounds pageBounds) {
         PageList<User> users = userMapper.selectByKeyword(key, pageBounds);
         final Map<Long, User> idUserMap = new HashMap<>();
-        users.forEach(u -> {
-            u.setRoles(new ArrayList<>());
-            idUserMap.put(u.getId(), u);
-        });
+        users.forEach(u -> idUserMap.put(u.getId(), u));
 
         // 填充角色信息
         List<Role> roles = roleMapper.selectByUserIds(idUserMap.keySet());
@@ -80,8 +77,12 @@ public class UserServiceImpl implements UserService {
             user.setPassword(PasswordUtil.encodedPassword(password));
         }
         userMapper.insertSelective(user);
-        List<Long> roleIds = user.getRoles().stream().map(r -> r.getId()).collect(Collectors.toList());
-        userMapper.insertUserRoles(user.getId(), roleIds);
+
+        List<Role> roles = user.getRoles();
+        if (CollectionUtils.isNotEmpty(roles)) {
+            List<Long> roleIds = roles.stream().map(r -> r.getId()).collect(Collectors.toList());
+            userMapper.insertUserRoles(user.getId(), roleIds);
+        }
     }
 
     @Override

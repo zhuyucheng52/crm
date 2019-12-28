@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * @author yucheng
@@ -24,6 +25,8 @@ public class Permission {
 	private String name;
 	private String value;
 	private String remark;
+	@Transient
+	private Long roleId;
 	private Long creator = 0L;
 	private String tenantId = "0";
 }

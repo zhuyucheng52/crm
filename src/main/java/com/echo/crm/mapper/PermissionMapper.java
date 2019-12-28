@@ -5,6 +5,9 @@ import com.echo.crm.utils.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * @author yucheng
  * @description
@@ -14,4 +17,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PermissionMapper extends BaseMapper<Permission> {
 	int deleteRolePermissionRelation(@Param("permissionId") Long id);
+
+	List<Permission> selectByRoleIds(@Param("roleIds") Set<Long> keySet);
 }
