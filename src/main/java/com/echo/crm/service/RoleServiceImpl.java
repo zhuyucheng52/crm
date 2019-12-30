@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +35,7 @@ public class RoleServiceImpl implements RoleService {
 	@Override
 	public Role findById(Long id) {
 		Assert.notNull(id, "角色ID不能为空");
-		return roleMapper.selectByPrimaryKey(id);
+		return roleMapper.selectById(id);
 	}
 
 	@Override
@@ -52,17 +53,28 @@ public class RoleServiceImpl implements RoleService {
 	@Transactional(rollbackFor = Exception.class)
 	public void add(Role role) {
 		roleMapper.insert(role);
+		updateRolePermissionByRoleId(role);
+	}
+
+	private void updateRolePermissionByRoleId(Role role) {
+		roleMapper.deleteRolePermissionByRoleId(role.getId());
+		List<Permission> permissions = role.getPermissions();
+		if (!CollectionUtils.isEmpty(permissions)) {
+			roleMapper.insertRolePermission(role.getId(), permissions);
+		}
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int update(Role role) {
+		updateRolePermissionByRoleId(role);
 		return roleMapper.updateByPrimaryKeySelective(role);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void delete(Long id) {
+		roleMapper.deleteRolePermissionByRoleId(id);
 		roleMapper.deleteByPrimaryKey(id);
 	}
 }

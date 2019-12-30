@@ -23,13 +23,13 @@
 			)
 		</if>
 	</select>
-	<resultMap id="permissionWithRoleId" type="com.echo.crm.entry.Permission">
+	<resultMap id="permissionWithRoleIdMap" type="com.echo.crm.entry.Permission">
 		<id property="id" column="r_id"/>
 		<result property="name" column="p_name"/>
 		<result property="value" column="p_value"/>
 		<result property="roleId" column="r_id"/>
 	</resultMap>
-	<select id="selectByRoleIds" resultMap="permissionWithRoleId">
+	<select id="selectByRoleIds" resultMap="permissionWithRoleIdMap">
 		select
 			rp.role_id as r_id,
 			p.id as p_id,

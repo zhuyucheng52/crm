@@ -17,6 +17,5 @@ import java.util.Set;
 @Repository
 public interface PermissionMapper extends BaseMapper<Permission> {
 	int deleteRolePermissionRelation(@Param("permissionId") Long id);
-
 	List<Permission> selectByRoleIds(@Param("roleIds") Set<Long> keySet);
 }

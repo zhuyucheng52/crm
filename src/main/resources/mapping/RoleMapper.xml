@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.echo.crm.mapper.RoleMapper">
+    <insert id="insertRolePermission">
+        insert into tbl_role_permission(role_id, permission_id) values
+        <foreach collection="permissions" item="permission" separator=",">
+            (#{roleId}, #{permission.id})
+        </foreach>
+    </insert>
+    <delete id="deleteRolePermissionByRoleId">
+        delete from tbl_role_permission
+        where role_id = #{roleId}
+    </delete>
     <select id="selectByKeyword" resultType="com.echo.crm.entry.Role">
         select *
         from tbl_role
@@ -25,5 +35,32 @@
               #{userId}
             </foreach>
         </if>
+    </select>
+    <resultMap id="roleWithPermissionMap" type="com.echo.crm.entry.Role">
+        <id property="id" column="r_id"/>
+        <result property="name" column="r_name"/>
+        <result property="remark" column="r_remark"/>
+        <collection property="permissions" javaType="List" ofType="com.echo.crm.entry.Permission">
+            <id property="id" column="p_id"/>
+            <result property="name" column="p_name"/>
+            <result property="value" column="p_value"/>
+            <result property="remark" column="p_remark"/>
+            <result property="parentId" column="p_parent_id"/>
+        </collection>
+    </resultMap>
+    <select id="selectById" resultMap="roleWithPermissionMap">
+        select
+            r.id as r_id,
+            r.name as r_name,
+            r.remark as r_remark,
+            p.id as p_id,
+            p.name as p_name,
+            p.value as p_value,
+            p.remark as p_remark,
+            p.parent_id as p_parent_id
+        from tbl_role r
+        left join tbl_role_permission rp on r.id = rp.role_id
+        left join tbl_permission p on rp.permission_id = p.id
+        where r.id = #{roleId}
     </select>
 </mapper>
