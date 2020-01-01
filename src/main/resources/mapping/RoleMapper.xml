@@ -63,4 +63,18 @@
         left join tbl_permission p on rp.permission_id = p.id
         where r.id = #{roleId}
     </select>
+    <resultMap id="roleMap" type="com.echo.crm.entry.Role">
+        <id property="id" column="r_id"/>
+        <result property="name" column="r_name"/>
+        <result property="remark" column="r_remark"/>
+    </resultMap>
+    <select id="selectSameNameRole" resultMap="roleMap">
+        select
+            r.id as r_id,
+            r.name as r_name,
+            r.remark as r_remark
+        from tbl_role r
+        where r.name = #{name}
+            and r.id != #{id}
+    </select>
 </mapper>

@@ -1,7 +1,7 @@
 package com.echo.crm.controller;
 
-import com.echo.crm.entry.Product;
-import com.echo.crm.service.ProductService;
+import com.echo.crm.entry.ProductCategory;
+import com.echo.crm.service.ProductCategoryService;
 import com.echo.crm.utils.Page;
 import com.echo.crm.utils.PageUtils;
 import com.echo.crm.utils.ResultInfo;
@@ -27,42 +27,39 @@ import javax.validation.Valid;
 
 @Slf4j
 @RestController
-public class ProductController implements BaseController<Product> {
+public class ProductCategoryController {
     @Autowired
-    private ProductService productService;
+    private ProductCategoryService productCategoryService;
 
-    @Override
-    @PostMapping("/product")
-    public ResultInfo<Product> add(@Valid @RequestBody Product product) {
-        return ResultInfo.createResult(productService.add(product));
+    @PostMapping("/product/category")
+    public ResultInfo<Object> add(@Valid @RequestBody ProductCategory category) {
+        productCategoryService.add(category);
+        return ResultInfo.createEmptyResult();
     }
 
-    @Override
-    @GetMapping("/product/{id:\\d+}")
-    public ResultInfo<Product> findById(@PathVariable("id") Long id) {
-        return ResultInfo.createResult(productService.findById(id));
+    @GetMapping("/product/category/{id:\\d+}")
+    public ResultInfo<ProductCategory> findById(@PathVariable("id") Long id) {
+        return ResultInfo.createResult(productCategoryService.findById(id));
     }
 
-    @Override
-    @PutMapping("/product")
-    public ResultInfo<Product> update(@RequestBody Product product) {
-        return ResultInfo.createResult(productService.update(product));
+    @PutMapping("/product/category")
+    public ResultInfo<Object> update(@RequestBody ProductCategory category) {
+    	productCategoryService.update(category);
+    	return ResultInfo.createEmptyResult();
     }
 
-    @Override
-    @DeleteMapping("/product/{id:\\d+}")
+    @DeleteMapping("/product/category/{id:\\d+}")
     public ResultInfo<Object> delete(@PathVariable("id") Long id) {
-        productService.delete(id);
+        productCategoryService.delete(id);
         return ResultInfo.createEmptyResult();
     }
 
 
-    @Override
-    @GetMapping("/products")
-    public ResultInfo<Page<Product>> findByKeyword(@RequestParam(value = "page", required = false) Integer page,
+    @GetMapping("/product/categories")
+    public ResultInfo<Page<ProductCategory>> findByKeyword(@RequestParam(value = "page", required = false) Integer page,
                                                    @RequestParam(value = "limit", required = false) Integer limit,
                                                    @RequestParam(value = "q", required = false) String key) {
-        PageList<Product> products = productService.findByKeyword(key, PageUtils.createPageBounds(page, limit));
+        PageList<ProductCategory> products = productCategoryService.findByKeyword(key, PageUtils.createPageBounds(page, limit));
         return ResultInfo.createResult(PageUtils.createPage(products));
     }
 

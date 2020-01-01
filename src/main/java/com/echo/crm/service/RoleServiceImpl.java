@@ -2,6 +2,7 @@ package com.echo.crm.service;
 
 import com.echo.crm.entry.Permission;
 import com.echo.crm.entry.Role;
+import com.echo.crm.entry.User;
 import com.echo.crm.mapper.PermissionMapper;
 import com.echo.crm.mapper.RoleMapper;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
@@ -67,8 +68,14 @@ public class RoleServiceImpl implements RoleService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int update(Role role) {
+		List<User> sameNameRoles = selectSameNameRole(role);
+		Assert.isTrue(CollectionUtils.isEmpty(sameNameRoles), "角色名称已存在");
 		updateRolePermissionByRoleId(role);
 		return roleMapper.updateByPrimaryKeySelective(role);
+	}
+
+	private List<User> selectSameNameRole(Role role) {
+		return roleMapper.selectSameNameRole(role.getName(), role.getId());
 	}
 
 	@Override

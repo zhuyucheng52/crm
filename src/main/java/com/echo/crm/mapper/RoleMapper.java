@@ -2,6 +2,7 @@ package com.echo.crm.mapper;
 
 import com.echo.crm.entry.Permission;
 import com.echo.crm.entry.Role;
+import com.echo.crm.entry.User;
 import com.echo.crm.utils.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -22,4 +23,5 @@ public interface RoleMapper extends BaseMapper<Role> {
 	int deleteRolePermissionByRoleId(@Param("roleId") Long id);
 	int insertRolePermission(@Param("roleId") Long id, @Param("permissions") List<Permission> permissions);
 	Role selectById(@Param("roleId") Long id);
+	List<User> selectSameNameRole(@Param("name") String name, @Param("id") Long id);
 }

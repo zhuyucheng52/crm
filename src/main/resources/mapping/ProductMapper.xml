@@ -25,4 +25,9 @@
         </if>
         order by id desc
     </select>
+  <select id="selectCountByCategoryId" resultType="java.lang.Integer">
+    select count(1)
+    from tbl_product p
+    where p.category_id = #{categoryId}
+  </select>
 </mapper>

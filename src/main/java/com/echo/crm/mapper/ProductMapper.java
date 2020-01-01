@@ -15,6 +15,7 @@ import java.util.List;
 
 @Repository
 public interface ProductMapper extends BaseMapper<Product> {
-    List<Product> findOtherByName(@Param("id") Long id, @Param("name") String name);
-    List<Product> findByName(String name);
+	List<Product> findOtherByName(@Param("id") Long id, @Param("name") String name);
+	List<Product> findByName(@Param("name") String name);
+	int selectCountByCategoryId(@Param("categoryId") Long id);
 }
