@@ -25,7 +25,8 @@ public class Product {
     @NotNull(message = "名称不能为空")
     private String name;
     private Long categoryId;
+    private ProductCategory category;
     private String remark;
     private Double price;
-    private Integer disabled;
+    private Boolean disabled;
 }

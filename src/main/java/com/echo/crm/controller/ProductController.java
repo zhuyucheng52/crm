@@ -27,37 +27,33 @@ import javax.validation.Valid;
 
 @Slf4j
 @RestController
-public class ProductController implements BaseController<Product> {
+public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @Override
     @PostMapping("/product")
-    public ResultInfo<Product> add(@Valid @RequestBody Product product) {
-        return ResultInfo.createResult(productService.add(product));
+    public ResultInfo<Object> add(@Valid @RequestBody Product product) {
+        productService.add(product);
+        return ResultInfo.createEmptyResult();
     }
 
-    @Override
     @GetMapping("/product/{id:\\d+}")
     public ResultInfo<Product> findById(@PathVariable("id") Long id) {
         return ResultInfo.createResult(productService.findById(id));
     }
 
-    @Override
     @PutMapping("/product")
-    public ResultInfo<Product> update(@RequestBody Product product) {
-        return ResultInfo.createResult(productService.update(product));
+    public ResultInfo<Object> update(@RequestBody Product product) {
+    	productService.update(product);
+        return ResultInfo.createEmptyResult();
     }
 
-    @Override
     @DeleteMapping("/product/{id:\\d+}")
     public ResultInfo<Object> delete(@PathVariable("id") Long id) {
         productService.delete(id);
         return ResultInfo.createEmptyResult();
     }
 
-
-    @Override
     @GetMapping("/products")
     public ResultInfo<Page<Product>> findByKeyword(@RequestParam(value = "page", required = false) Integer page,
                                                    @RequestParam(value = "limit", required = false) Integer limit,
