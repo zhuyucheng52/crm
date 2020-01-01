@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,7 +87,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void update(User user) {
-        Assert.notNull(user.getId(), "用户ID不能为null");
+        Assert.notNull(user.getId(), "用户ID不能为空");
         // 不支持用户名和密码更新
     	user.setUsername(null);
 		user.setPassword(null);

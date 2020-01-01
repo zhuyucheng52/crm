@@ -26,7 +26,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product findById(Long id) {
-        Assert.notNull(id, "ID不能为空");
+        Assert.notNull(id, "产品ID不能为空");
         return productMapper.selectById(id);
     }
 

@@ -24,7 +24,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public Customer findById(Long id) {
-		Assert.notNull(id, "角色ID不能为空");
+		Assert.notNull(id, "客户ID不能为空");
 		return customerMapper.selectById(id);
 	}
 
