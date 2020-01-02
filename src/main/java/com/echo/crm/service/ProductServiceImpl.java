@@ -57,4 +57,9 @@ public class ProductServiceImpl implements ProductService {
     public PageList<Product> findByKeyword(String key, PageBounds pageBounds) {
         return productMapper.selectByKeyword(key, pageBounds);
     }
+
+    @Override
+    public PageList<Product> findByCategoryId(Long categoryId) {
+        return productMapper.selectByCategoryId(categoryId);
+    }
 }

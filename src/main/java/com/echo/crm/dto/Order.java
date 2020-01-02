@@ -1,4 +1,4 @@
-package com.echo.crm.entry;
+package com.echo.crm.dto;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -47,4 +47,5 @@ public class Order {
     private String customerName;
     private String customerMobile;
     private Integer approveStatus;
+    private Integer disabled;
 }

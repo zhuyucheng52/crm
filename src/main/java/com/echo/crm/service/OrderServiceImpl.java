@@ -45,39 +45,22 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Order add(Order order) {
-//        Assert.isTrue(order.getProductNum() > 0, "商品数量必须大于0");
-//        Assert.isTrue(order.getPayment() >= 0, "订单金额必须大于等于0");
-//
-//        Product p = productMapper.selectByPrimaryKey(order.getProductId());
-//        Assert.notNull(p, "商品不存在");
-//
-//        if (properties.isOrderNeedApprove()) {
-//            Long approveId = order.getApproveId();
-//            User u = userMapper.selectByPrimaryKey(approveId);
-//            Assert.notNull(u, String.format("审批人[%s]不存在", approveId));
-//        }
-//
-//        if (order.getCustomerId() != null) {
-//            // TODO yucheng 校验客户是否存在
-//        }
-
+    public void add(Order order) {
+        Assert.isTrue(order.getProductNum() > 0, "商品数量必须大于0");
+        Assert.isTrue(order.getPayment() >= 0, "订单金额必须大于等于0");
         orderMapper.insertSelective(order);
-        return findById(order.getId());
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Order update(Order order) {
+    public int update(Order order) {
         Long id = order.getId();
         Assert.notNull(id, "订单ID不能为空");
 
         Order o = orderMapper.selectByPrimaryKey(id);
         Assert.notNull(o, String.format("被修改订单[%s]不存在", id));
         Assert.isTrue(o.getApproveStatus() != Order.APPROVE_STATUS_PASS, "审批已经通过，禁止修改");
-        orderMapper.updateByPrimaryKeySelective(order);
-
-        return orderMapper.selectByPrimaryKey(id);
+        return orderMapper.updateByPrimaryKeySelective(order);
     }
 
     @Override
@@ -85,7 +68,7 @@ public class OrderServiceImpl implements OrderService {
     public void delete(Long id) {
         Order o = findById(id);
         Assert.notNull(o, String.format("订单[%s]不存在", id));
-        o.setDisabled(1);
+//        o.setDisabled(1);
         orderMapper.updateByPrimaryKeySelective(o);
     }
 

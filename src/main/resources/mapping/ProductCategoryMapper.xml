@@ -1,33 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.echo.crm.mapper.ProductCategoryMapper">
-    <resultMap id="productCategoryMap" type="com.echo.crm.entry.ProductCategory">
-        <id property="id" column="c_id"/>
-        <result property="name" column="c_name"/>
-        <result property="remark" column="c_remark"/>
-    </resultMap>
-    <select id="selectByKeyword" resultMap="productCategoryMap">
+	<resultMap id="productCategoryMap" type="com.echo.crm.entry.ProductCategory">
+		<id property="id" column="c_id"/>
+		<result property="name" column="c_name"/>
+		<result property="priority" column="c_priority"/>
+		<result property="remark" column="c_remark"/>
+	</resultMap>
+	<select id="selectByKeyword" resultMap="productCategoryMap">
+		select
+		c.id as c_id,
+		c.name as c_name,
+		c.priority as c_priority,
+		c.remark as c_remark
+		from tbl_product_category c
+		<if test="key != null and key != ''">
+			where c.name like concat('%', #{key}, '%')
+		</if>
+		order by c.priority desc, c.id asc
+	</select>
+	<select id="selectByName" resultMap="productCategoryMap">
         select
             c.id as c_id,
             c.name as c_name,
-            c.remark as c_remark
-        from tbl_product_category c
-        <if test="key != null and key != ''">
-            where c.name like concat('%', #{key}, '%')
-        </if>
-    </select>
-    <select id="selectByName" resultMap="productCategoryMap">
-        select
-            c.id as c_id,
-            c.name as c_name,
+						c.priority as c_priority,
             c.remark as c_remark
         from tbl_product_category c
         where c.name = #{name}
     </select>
-    <select id="selectSameNameCategories" resultMap="productCategoryMap">
+	<select id="selectSameNameCategories" resultMap="productCategoryMap">
         select
             c.id as c_id,
             c.name as c_name,
+						c.priority as c_priority,
             c.remark as c_remark
         from tbl_product_category c
         where c.name = #{name}

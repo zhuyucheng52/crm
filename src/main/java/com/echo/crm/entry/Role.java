@@ -23,6 +23,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private Integer priority;
     private String remark;
     private List<Permission> permissions = new ArrayList<>();
     @Transient

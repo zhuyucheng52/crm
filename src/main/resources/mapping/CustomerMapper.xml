@@ -7,6 +7,7 @@
         <result property="mobile" column="c_mobile"/>
         <result property="address" column="c_address"/>
         <result property="disabled" column="c_disabled"/>
+        <result property="priority" column="c_priority"/>
         <result property="remark" column="c_remark"/>
     </resultMap>
     <select id="selectByKeyword" resultMap="customerMap">
@@ -16,6 +17,7 @@
             c.mobile as c_mobile,
             c.address as c_address,
             c.disabled as c_disabled,
+            c.priority as c_priority,
             c.remark as c_remark
         from tbl_customer c
         <if test="key != null and key != ''">
@@ -24,7 +26,7 @@
                 or mobile like concat('%', #{key}, '%')
             )
         </if>
-        order by id asc
+        order by c.priority desc, c.id asc
     </select>
     <select id="selectById" resultMap="customerMap">
         select
@@ -33,6 +35,7 @@
             c.mobile as c_mobile,
             c.address as c_address,
             c.disabled as c_disabled,
+            c.priority as c_priority,
             c.remark as c_remark
         from tbl_customer c
         where c.id = #{id}

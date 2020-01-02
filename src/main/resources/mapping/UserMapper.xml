@@ -20,6 +20,7 @@
 		<result property="mobile" column="u_mobile"/>
 		<result property="remark" column="u_remark"/>
 		<result property="disabled" column="u_disabled"/>
+		<result property="priority" column="u_priority"/>
 	</resultMap>
 	<select id="selectByKeyword" resultMap="userMap">
 		select
@@ -29,7 +30,8 @@
 			u.birthday as u_birthday,
 			u.mobile as u_mobile,
 			u.remark as u_remark,
-			u.disabled as u_disabled
+			u.disabled as u_disabled,
+			u.priority as u_priority
 		from tbl_user u
 		where u.deleted = 0
 		<if test="key != null and key != ''">
@@ -39,7 +41,7 @@
 			or u.mobile like concat('%', #{key},'%')
 			)
 		</if>
-		order by u_id asc
+		order by u.priority desc, u.id asc
 	</select>
 	<select id="selectRolesByUsername" resultType="java.lang.String">
         select distinct r.value
@@ -65,6 +67,7 @@
 		<result property="mobile" column="u_mobile"/>
 		<result property="remark" column="u_remark"/>
 		<result property="disabled" column="u_disabled"/>
+		<result property="priority" column="u_priority"/>
 		<collection property="roles" javaType="List" ofType="com.echo.crm.entry.Role">
 			<id property="id" column="r_id"/>
 			<result property="name" column="r_name"/>
@@ -78,6 +81,7 @@
 			u.password as u_password,
 			u.birthday as u_birtyday,
 			u.mobile as u_mobile,
+			u.priority as u_priority,
 			u.remark as u_remark,
 			r.id as r_id,
 			r.name as r_name
@@ -93,6 +97,7 @@
 			u.username as u_username,
 			u.birthday as u_birthday,
 			u.mobile as u_mobile,
+			u.priority as u_priority,
 			u.remark as u_remark,
 			r.id as r_id,
 			r.name as r_name

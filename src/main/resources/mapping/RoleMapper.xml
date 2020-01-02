@@ -17,7 +17,7 @@
         <if test="key != null and key != ''">
             where name like concat('%', #{key}, '%')
         </if>
-        order by id asc
+        order by priority desc, id asc
     </select>
     <select id="selectByUserId" resultType="com.echo.crm.entry.Role">
         select r.*
@@ -39,6 +39,7 @@
     <resultMap id="roleWithPermissionMap" type="com.echo.crm.entry.Role">
         <id property="id" column="r_id"/>
         <result property="name" column="r_name"/>
+        <result property="priority" column="r_priority"/>
         <result property="remark" column="r_remark"/>
         <collection property="permissions" javaType="List" ofType="com.echo.crm.entry.Permission">
             <id property="id" column="p_id"/>
@@ -52,6 +53,7 @@
         select
             r.id as r_id,
             r.name as r_name,
+            r.priority as r_priority,
             r.remark as r_remark,
             p.id as p_id,
             p.name as p_name,
@@ -66,12 +68,14 @@
     <resultMap id="roleMap" type="com.echo.crm.entry.Role">
         <id property="id" column="r_id"/>
         <result property="name" column="r_name"/>
+        <result property="priority" column="r_priority"/>
         <result property="remark" column="r_remark"/>
     </resultMap>
     <select id="selectSameNameRole" resultMap="roleMap">
         select
             r.id as r_id,
             r.name as r_name,
+            r.priority as r_priority,
             r.remark as r_remark
         from tbl_role r
         where r.name = #{name}

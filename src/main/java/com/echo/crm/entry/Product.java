@@ -22,11 +22,11 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull(message = "名称不能为空")
     private String name;
     private Long categoryId;
     private ProductCategory category;
     private String remark;
     private Double price;
+    private Integer priority;
     private Boolean disabled;
 }

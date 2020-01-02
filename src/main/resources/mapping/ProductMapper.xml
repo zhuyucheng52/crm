@@ -17,6 +17,7 @@
       <id property="id" column="p_id"/>
       <result property="name" column="p_name"/>
       <result property="price" column="p_price"/>
+      <result property="priority" column="p_priority"/>
       <result property="disabled" column="p_disabled"/>
       <result property="remark" column="p_remark"/>
       <association property="category" javaType="com.echo.crm.entry.ProductCategory">
@@ -30,6 +31,7 @@
             p.name as p_name,
             p.price as p_price,
             p.disabled as p_disabled,
+            p.priority as p_priority,
             p.remark as p_remark,
             c.id as c_id,
             c.name as c_name
@@ -38,7 +40,7 @@
         <if test="key != null and key != ''">
               where p.name like concat('%', #{key},'%')
         </if>
-        order by p.id desc
+        order by p.priority desc, p.id asc
     </select>
   <select id="selectCountByCategoryId" resultType="java.lang.Integer">
     select count(1)
@@ -50,6 +52,7 @@
           p.id as p_id,
           p.name as p_name,
           p.price as p_price,
+          p.priority as p_priority,
           p.disabled as p_disabled,
           p.remark as p_remark,
           c.id as c_id,
@@ -57,5 +60,27 @@
     from tbl_product p
     inner join tbl_product_category c on p.category_id = c.id
     where p.id = #{id}
+  </select>
+  <resultMap id="productMap" type="com.echo.crm.entry.Product">
+    <id property="id" column="p_id"/>
+    <result property="name" column="p_name"/>
+    <result property="price" column="p_price"/>
+    <result property="priority" column="p_priority"/>
+    <result property="disabled" column="p_disabled"/>
+    <result property="remark" column="p_remark"/>
+		<result property="categoryId" column="p_category_id"/>
+  </resultMap>
+  <select id="selectByCategoryId" resultMap="productMap">
+    select
+        p.id as p_id,
+        p.name as p_name,
+        p.price as p_price,
+        p.priority as p_priority,
+        p.disabled as p_disabled,
+        p.remark as p_remark,
+        p.category_id as p_category_id
+    from tbl_product p
+    where p.category_id = #{categoryId}
+    order by p.priority desc, p.id asc
   </select>
 </mapper>

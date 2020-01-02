@@ -2,6 +2,7 @@ package com.echo.crm.mapper;
 
 import com.echo.crm.entry.Product;
 import com.echo.crm.utils.BaseMapper;
+import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -19,4 +20,5 @@ public interface ProductMapper extends BaseMapper<Product> {
 	List<Product> selectByName(@Param("name") String name);
 	int selectCountByCategoryId(@Param("categoryId") Long id);
 	Product selectById(@Param("id") Long id);
+	PageList<Product> selectByCategoryId(@Param("categoryId") Long categoryId);
 }

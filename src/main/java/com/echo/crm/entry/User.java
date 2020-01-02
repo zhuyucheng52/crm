@@ -34,6 +34,7 @@ public class User {
     private String avatar;
     private Boolean disabled;
     private Boolean deleted;
+    private Integer priority;
     private List<Role> roles = new ArrayList<>();
 
     private String remark;

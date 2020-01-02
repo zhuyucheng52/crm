@@ -27,17 +27,15 @@ import javax.validation.Valid;
 
 @Slf4j
 @RestController
-public class OrderController implements BaseController<Order> {
+public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @Override
     @GetMapping("/order/{id:\\d+}")
     public ResultInfo<Order> findById(@PathVariable("id") Long id) {
         return ResultInfo.createResult(orderService.findById(id));
     }
 
-    @Override
     @GetMapping("/orders")
     public ResultInfo<Page<Order>> findByKeyword(@RequestParam(value = "page") Integer page,
                                                  @RequestParam(value = "limit") Integer limit,
@@ -46,19 +44,18 @@ public class OrderController implements BaseController<Order> {
         return ResultInfo.createResult(PageUtils.createPage(orders));
     }
 
-    @Override
     @PostMapping("/order")
-    public ResultInfo<Order> add(@Valid @RequestBody Order order) {
-        return ResultInfo.createResult(orderService.add(order));
+    public ResultInfo<Object> add(@Valid @RequestBody Order order) {
+        orderService.add(order);
+        return ResultInfo.createEmptyResult();
     }
 
-    @Override
     @PutMapping("/order")
-    public ResultInfo<Order> update(@RequestBody Order order) {
-        return ResultInfo.createResult(orderService.update(order));
+    public ResultInfo<Object> update(@RequestBody Order order) {
+        orderService.update(order);
+        return ResultInfo.createEmptyResult();
     }
 
-    @Override
     public ResultInfo<Object> delete(Long id) {
         return null;
     }

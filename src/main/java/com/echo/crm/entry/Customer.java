@@ -23,5 +23,6 @@ public class Customer {
     private String mobile;
     private String address;
     private Boolean disabled;
+    private Integer priority;
     private String remark;
 }

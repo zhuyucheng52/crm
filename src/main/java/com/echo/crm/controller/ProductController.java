@@ -54,6 +54,12 @@ public class ProductController {
         return ResultInfo.createEmptyResult();
     }
 
+    @GetMapping("/product/categoryid/{id:\\d+}")
+    private ResultInfo<PageList<Product>> findProductByCategory(@PathVariable("id") Long categoryId) {
+        PageList<Product> products = productService.findByCategoryId(categoryId);
+        return ResultInfo.createResult(products);
+    }
+
     @GetMapping("/products")
     public ResultInfo<Page<Product>> findByKeyword(@RequestParam(value = "page", required = false) Integer page,
                                                    @RequestParam(value = "limit", required = false) Integer limit,

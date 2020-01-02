@@ -18,4 +18,5 @@ public interface ProductService {
 	int update(Product t);
 	void delete(Long id);
 	PageList<Product> findByKeyword(String key, PageBounds pageBounds);
+	PageList<Product> findByCategoryId(Long categoryId);
 }

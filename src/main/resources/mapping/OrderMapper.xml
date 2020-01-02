@@ -1,30 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.echo.crm.mapper.OrderMapper">
-    <resultMap id="selectByKeywordMap" type="com.echo.crm.entry.Order">
-        <id property="id" column="o_id" />
-        <result property="onlineId" column="o_online_id"/>
-        <result property="payment" column="o_payment"/>
-        <result property="status" column="o_status"/>
-        <result property="address" column="o_address"/>
-        <association property="product" javaType="com.echo.crm.entry.Product">
-            <id property="id" column="p_id"/>
-            <result property="name" column="p_name"/>
-        </association>
-    </resultMap>
-    <select id="selectByKeyword" resultMap="selectByKeywordMap">
-        select o.id as o_id,
-          p.id as p_id,
-          p.name as p_name,
-          o.payment as o_payment,
-          o.status as o_status,
-          o.address as o_address
-        from tbl_order o
-        inner join tbl_product p on o.product_id = p.id
-        where o.disabled = 0
-        <if test="key != null and key != ''">
-            and o.id = #{key}
-        </if>
-        order by o_id desc
-    </select>
+	<resultMap id="orderMap" type="com.echo.crm.entry.Order">
+		<id property="id" column="o_id"/>
+		<result property="num" column="o_num"/>
+		<result property="productId" column="o_product_id"/>
+		<result property="productName" column="o_product_name"/>
+		<result property="productNum" column="o_product_num"/>
+		<result property="payment" column="o_payment"/>
+		<result property="status" column="o_status"/>
+		<result property="address" column="o_address"/>
+		<result property="remark" column="o_remark"/>
+		<result property="customerId" column="o_customer_id"/>
+		<result property="customerName" column="o_customer_name"/>
+		<result property="customerMobile" column="o_customer_mobile"/>
+		<result property="approveStatus" column="o_approve_status"/>
+	</resultMap>
+	<select id="selectByKeyword" resultMap="orderMap">
+		select
+		o.id as o_id,
+		o.num as o_num,
+		o.product_id as o_product_id,
+		o.product_name as o_product_name,
+		o.product_num as o_product_num,
+		o.payment as o_payment,
+		o.status as o_status,
+		o.address as o_address,
+		o.remark as o_remark,
+		o.customer_id as o_customer_id,
+		o.customer_name as o_customer_name,
+		o.customer_mobile as o_customer_mobile,
+		o.approve_status as o_approve_status
+		from tbl_order o
+		<if test="key != null and key != ''">
+			where (
+				o.num like concat('%', #{key}, '%')
+				or o.product_name like concat('%', #{key}, '%')
+				or o.customer_name like concat('%', #{key}, '%')
+				or o.customer_mobile like concat('%', #{key}, '%')
+				or o.address like concat('%', #{key}, '%')
+			)
+		</if>
+		order by o_id desc
+	</select>
 </mapper>
