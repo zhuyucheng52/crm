@@ -14,6 +14,6 @@ public interface OrderService {
 	Order findById(Long id);
 	void add(Order order);
 	int update(Order order);
-	void delete(Long id);
+	int delete(Long id);
 	PageList<Order> findByKeyword(String key, PageBounds pageBounds);
 }

@@ -65,11 +65,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void delete(Long id) {
-        Order o = findById(id);
-        Assert.notNull(o, String.format("订单[%s]不存在", id));
-//        o.setDisabled(1);
-        orderMapper.updateByPrimaryKeySelective(o);
+    public int delete(Long id) {
+    	return orderMapper.deleteByPrimaryKey(id);
     }
 
 }

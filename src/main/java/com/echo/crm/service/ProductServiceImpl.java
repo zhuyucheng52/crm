@@ -1,6 +1,7 @@
 package com.echo.crm.service;
 
 import com.echo.crm.entry.Product;
+import com.echo.crm.entry.ProductCategory;
 import com.echo.crm.mapper.ProductMapper;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
@@ -44,6 +45,10 @@ public class ProductServiceImpl implements ProductService {
     public int update(Product product) {
         List<Product> products = productMapper.selectSameNameProduct(product.getName(), product.getId());
         Assert.isTrue(CollectionUtils.isEmpty(products), "产品名称已存在");
+        ProductCategory category = product.getCategory();
+        if (category != null) {
+            product.setCategoryId(category.getId());
+        }
         return productMapper.updateByPrimaryKeySelective(product);
     }
 
